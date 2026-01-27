@@ -1,0 +1,65 @@
+/* --- 1. CONFIGURACIÓN DEL ANCHO DEL MENÚ --- */
+#offcanvasNavbar {
+    --bs-offcanvas-width: 350px;
+}
+
+/* CORRECCIÓN: Evitar el scroll horizontal en el menú */
+.offcanvas-body {
+    overflow-x: hidden; /* Esto oculta el desbordamiento lateral */
+    overflow-y: auto;   /* Mantiene el scroll vertical si la lista es muy larga */
+}
+
+/* --- 2. Animación de Entrada del Contenido Principal --- */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* --- 3. Animaciones del Menú Lateral --- */
+.offcanvas-body .nav-link {
+    transition: all 0.3s ease;
+    position: relative;
+    /* Aseguramos que el link no sea más ancho que su contenedor padre */
+    width: 100%;
+    display: block;
+}
+
+.offcanvas-body .nav-link:hover {
+    transform: translateX(10px);
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border-radius: 5px;
+}
+
+.offcanvas-body .nav-link::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0; width: 4px;
+    background-color: #ffffff;
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+.offcanvas-body .nav-link:hover::before {
+    transform: scaleY(1);
+}
+
+/* --- 4. Animación del Dropdown de Usuario --- */
+.dropdown-menu {
+    animation: dropdownSlide 0.3s ease;
+    transform-origin: top right;
+}
+@keyframes dropdownSlide {
+    from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* --- 5. Global: Evitar scroll horizontal en toda la página por animaciones de entrada --- */
+body {
+    overflow-x: hidden;
+}
+
+/* Logo Hover */
+.navbar-brand img { transition: transform 0.3s ease; }
+.navbar-brand:hover img { transform: scale(1.1); }

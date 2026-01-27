@@ -1,0 +1,74 @@
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #fff;
+            color: black;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #00a6ed;
+            border-radius: 4px;
+        }
+        .search-bar button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #003f5c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .search-bar button:hover {
+            background-color: #007bb5;
+        }
+        .table-container {
+            position: relative;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #003f5c;
+            position: relative;
+            z-index: 1;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #00a6ed;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: auto;
+            z-index: 0;
+            opacity: 0.3;
+            transform: translateX(-50%);
+            left: 50%;
+        }
+        .background-image img {
+            width: 100%;
+            height: auto;
+        }
+
+        li{
+            margin-bottom: 20px;
+        }

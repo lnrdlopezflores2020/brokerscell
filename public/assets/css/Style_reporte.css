@@ -1,0 +1,74 @@
+/* public/css/pdf_style.css */
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #333;
+}
+
+/* --- CABECERA --- */
+.header-container {
+    width: 100%;
+    /* Altura suficiente para contener logo y texto */
+    height: 80px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #007bb5;
+    padding-bottom: 10px;
+}
+
+.logo {
+    /* Esquina Izquierda */
+    float: left;
+    width: 80px; /* Ajusta este tamaño según tu imagen */
+    height: auto;
+}
+
+.header-text {
+    /* Esquina Derecha */
+    float: right;
+    text-align: right; /* Alinea el texto interno a la derecha */
+    width: 60%; /* Limitamos el ancho para que no choque con el logo */
+    margin-top: 10px; /* Ajusta esto para centrarlo verticalmente con el logo */
+}
+
+.header-text h1 {
+    margin: 0;
+    font-size: 18px;
+    text-transform: uppercase;
+    color: #007bb5;
+}
+
+.header-text p {
+    margin: 3px 0 0;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.4;
+}
+
+/* --- TABLAS (Igual que antes) --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    clear: both; /* IMPORTANTE: Asegura que la tabla no se suba al header */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #007bb5;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 10px;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.text-center { text-align: center; }
