@@ -75,8 +75,8 @@
                         </li>
 
                         <li class="nav-item p-2">
-                            <a class="nav-link px-3 py-2 rounded {{ request()->routeIs('cliente.soporte') ? 'active bg-white bg-opacity-10 fw-bold' : '' }}"
-                               href="/cliente/soporte">
+                            <a class="nav-link px-3 py-2 rounded {{ request()->routeIs('chatbot.index') ? 'active bg-white bg-opacity-10 fw-bold' : '' }}"
+                               href="/cliente/asistente">
                                 <i class="bi bi-arrow-repeat me-3 fs-5"></i> Ayuda y Soporte
                             </a>
                         </li>

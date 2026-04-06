@@ -14,8 +14,8 @@
     <div class="card shadow-sm border-0">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="card-title h1 m-0"><i class="bi bi-tools me-2"></i>Reparaciones</h4> <div>
-
+                <h4 class="card-title h1 m-0"><i class="bi bi-tools me-2"></i>Reparaciones</h4>
+                <div>
                     @if(auth()->user()->rol_usuario === 'administrador')
                         <a class="btn btn-success me-2" href="{{url('admon/reportes/reparaciones')}}" target="_blank" role="button">
                             <i class="bi bi-file-earmark-pdf"></i> Reporte PDF
@@ -27,13 +27,15 @@
                             <i class="bi bi-plus-lg"></i> Nueva Reparación
                         </a>
                     @endif
-
                 </div>
             </div>
 
-            <div class="table-responsive">
+            {{-- CAMBIO: Agregamos max-height y overflow-y para crear la caja con scroll --}}
+            <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
                 <table class="table table-hover table-bordered align-middle">
-                    <thead class="table-dark">
+
+                    {{-- CAMBIO: Agregamos position sticky, top 0 y z-index 1 para fijar el encabezado --}}
+                    <thead class="table-dark" style="position: sticky; top: 0; z-index: 1;">
                     <tr>
                         <th scope="col"><i class="bi bi-hash"></i> # Orden</th>
                         <th scope="col"><i class="bi bi-card-text"></i> Descripción</th>
@@ -67,9 +69,9 @@
                                 @endif
 
                                 @if(auth()->user()->rol_usuario === 'administrador')
-                                        <a class="btn btn-outline-danger btn-sm" href="{{route('admon_reportes.nota', $fila->ID_rep)}}" target="_blank" role="button" title="Imprimir Nota">
-                                            <i class="bi bi-file-earmark-pdf-fill"></i> PDF
-                                        </a>
+                                    <a class="btn btn-outline-danger btn-sm" href="{{route('admon_reportes.nota', $fila->ID_rep)}}" target="_blank" role="button" title="Imprimir Nota">
+                                        <i class="bi bi-file-earmark-pdf-fill"></i> PDF
+                                    </a>
                                 @endif
                             </td>
                             @if(auth()->user()->rol_usuario === 'tecnico')
@@ -82,17 +84,6 @@
                                            title="Actualizar Estado">
                                             <i class="bi bi-pencil-square"></i> Actualizar
                                         </a>
-
-                                        <form action="{{url('/tecnico/dispositivos/' . $fila->ID_rep) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-
-                                            <button class="btn btn-sm btn-outline-danger" type="submit"
-                                                    onclick="return confirm('¿Confirmas que deseas eliminar la reparacion con numero de orden {{$fila->ID_rep}}?');"
-                                                    title="Eliminar">
-                                                Eliminar <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
                                     </div>
                                 </td>
                             @endif
@@ -111,4 +102,3 @@
         </div>
     </div>
 @endsection
-

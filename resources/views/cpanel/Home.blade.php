@@ -13,7 +13,7 @@
     <style>
         /* Estilos personalizados mínimos para complementar Bootstrap */
         .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/assets/images/inicio.jpg');
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/assets/images/HOME.png');
 
             /* CAMBIO CLAVE: Usar 'contain' en lugar de 'cover' */
             background-size: contain;

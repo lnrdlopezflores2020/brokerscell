@@ -1,46 +1,160 @@
 @extends('cpanel/plantillaClientes')
 @section('title', 'Soporte')
+@section('title', 'Asistente IA')
+
 @section('content')
-    <div div class="container-fluid py-4 w-100" style="min-width: 320px;">
-        <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
-            <div class="col-md-8 col-lg-6 text-center">
+    <div class="container-fluid p-0" style="background-color: #131314; height: 90vh;">
 
-                {{-- Tarjeta Principal --}}
-                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-                    <div class="card-body p-5">
+        {{-- ÁREA DEL CHAT --}}
+        <div id="chat-container" class="d-flex flex-column p-4 overflow-auto" style="height: 80%; scroll-behavior: smooth;">
 
-                        {{-- Icono Animado o Ilustrativo --}}
-                        <div class="mb-4 text-primary bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
-                            <i class="bi bi-headset display-3"></i>
-                        </div>
-
-                        <h2 class="fw-bold text-dark mb-3">Ayuda y Soporte</h2>
-
-                        <p class="lead text-muted mb-4">
-                            En <strong class="text-primary">SoluxMovil</strong> nos preocupamos por brindarte una atención y servicio de calidad.
-                        </p>
-
-                        <div class="alert alert-info border-0 d-inline-block px-4 py-3 rounded-pill mb-4">
-                            <i class="bi bi-calendar-event me-2"></i>
-                            Esta sección estará disponible a partir de <strong>Junio de 2026</strong>.
-                        </div>
-
-                        <p class="text-muted small mb-4">
-                            Estamos trabajando para mejorar tu experiencia. Mientras tanto, si tienes dudas sobre otros servivios, puedes contactarnos directamente en taller.
-                        </p>
-
-                        {{-- Botón de Regreso --}}
-                        <a href="{{ route('Mis-reparaciones.index') }}" class="btn btn-outline-primary px-4 py-2 rounded-pill">
-                            <i class="bi bi-arrow-left me-2"></i> Volver a Mis Reparaciones
-                        </a>
-
-                    </div>
-
-                    {{-- Barra decorativa inferior --}}
-                    <div class="card-footer bg-primary py-2 border-0"></div>
+            {{-- Mensaje de Bienvenida --}}
+            <div class="d-flex align-items-start mb-4">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                     style="width: 40px; height: 40px; background: linear-gradient(135deg, #4285f4, #d96570);">
+                    <i class="bi bi-stars text-white"></i>
                 </div>
+                <div class="text-white">
+                    <div class="fw-bold mb-1">SoluxBot</div>
+                    <div class="p-3 rounded-4" style="background-color: #1e1f20; max-width: 600px; line-height: 1.6;">
+                        ¡Hola! Soy la IA de SoluxMovil 🤖. <br>
+                        Puedo darte presupuestos estimados al instante. <br>
+                        Ejemplo: <i>"¿Cuánto cuesta cambiar la pantalla de un iPhone 11?"</i>
+                    </div>
+                </div>
+            </div>
 
+            {{-- AQUÍ SE AGREGARÁN LOS MENSAJES CON JS --}}
+
+        </div>
+
+        {{-- ÁREA DE INPUT (FLOTANTE) --}}
+        <div class="fixed-bottom p-3 d-flex justify-content-center" style="background: linear-gradient(to top, #131314 80%, transparent);">
+            <div class="input-group" style="max-width: 800px;">
+                <input type="text" id="user-input"
+                       class="form-control border-0 py-3 ps-4 shadow-lg text-white"
+                       placeholder="Escribe tu consulta aquí..."
+                       style="background-color: #1e1f20; border-radius: 30px 0 0 30px; color: white !important;">
+
+                <button class="btn border-0 pe-4 shadow-lg" id="btn-send"
+                        style="background-color: #1e1f20; border-radius: 0 30px 30px 0;">
+                    <i class="bi bi-send-fill fs-5 text-primary"></i>
+                </button>
             </div>
         </div>
+
     </div>
+
+    {{-- ESTILOS EXTRA PARA MODO OSCURO --}}
+    <style>
+        /* Scrollbar oscura */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #131314; }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+
+        /* Input focus sin borde azul feo */
+        #user-input:focus { box-shadow: none; outline: none; background-color: #2d2e2f; }
+        #user-input::placeholder { color: #888; }
+    </style>
+
+    {{-- LÓGICA JAVASCRIPT --}}
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const btnSend = document.getElementById('btn-send');
+
+        // Enviar con Enter
+        userInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        btnSend.addEventListener('click', sendMessage);
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (text === '') return;
+
+            // 1. Agregar mensaje del usuario (Derecha)
+            appendMessage('user', text);
+            userInput.value = '';
+
+            // 2. Mostrar indicador "Escribiendo..."
+            const loadingId = appendLoading();
+            scrollToBottom();
+
+            try {
+                // 3. Petición al Servidor Laravel
+                const response = await fetch("{{ route('chatbot.send') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ message: text })
+                });
+
+                const data = await response.json();
+
+                // 4. Quitar loading y mostrar respuesta IA
+                document.getElementById(loadingId).remove();
+                appendMessage('bot', data.reply);
+
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                appendMessage('bot', 'Lo siento, ocurrió un error. Intenta de nuevo.');
+            }
+
+            scrollToBottom();
+        }
+
+        function appendMessage(role, text) {
+            const div = document.createElement('div');
+            div.className = `d-flex align-items-start mb-4 ${role === 'user' ? 'justify-content-end' : ''}`;
+
+            let avatar = '';
+            let bgClass = role === 'user' ? 'bg-primary text-white' : 'text-white';
+            let style = role === 'user' ? 'border-radius: 20px 20px 5px 20px;' : 'background-color: #1e1f20; border-radius: 20px 20px 20px 5px;';
+
+            // Icono del Bot
+            if (role === 'bot') {
+                avatar = `
+            <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                 style="width: 40px; height: 40px; background: linear-gradient(135deg, #4285f4, #d96570); flex-shrink: 0;">
+                <i class="bi bi-stars text-white"></i>
+            </div>`;
+            }
+
+            let content = `
+            ${role === 'bot' ? avatar : ''}
+            <div class="p-3 shadow-sm ${bgClass}" style="max-width: 80%; ${style}">
+                ${text}
+            </div>
+        `;
+
+            div.innerHTML = content;
+            chatContainer.appendChild(div);
+        }
+
+        function appendLoading() {
+            const id = 'loading-' + Date.now();
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'd-flex align-items-start mb-4';
+            div.innerHTML = `
+            <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                 style="width: 40px; height: 40px; background: linear-gradient(135deg, #4285f4, #d96570);">
+                <i class="bi bi-stars text-white"></i>
+            </div>
+            <div class="p-3 text-white rounded-4" style="background-color: #1e1f20;">
+                <span class="spinner-grow spinner-grow-sm" role="status"></span> Escribiendo...
+            </div>
+        `;
+            chatContainer.appendChild(div);
+            return id;
+        }
+
+        function scrollToBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
 @endsection

@@ -13,7 +13,7 @@
     <img src="{{ public_path('assets/images/SOLUXMOVIL.png') }}" class="logo" alt="Logo" style="width: 90px">
 
     <div class="header-text">
-        <h1>Historial de reparaciones</h1>
+        <h1>Reporte de Clientes</h1>
         <p>SoluxMovil</p>
         <p>Fecha: {{ date('d/m/Y') }}</p>
     </div>

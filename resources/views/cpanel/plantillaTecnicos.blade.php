@@ -83,13 +83,6 @@
                         </li>
 
                         <li class="nav-item border-top border-white-50 my-2 mx-3"></li>
-
-                        <li class="nav-item p-2">
-                            <a class="nav-link px-3 py-2 rounded {{ request()->routeIs('Actualizar.*') ? 'active bg-white bg-opacity-10 fw-bold' : '' }}"
-                               href="/tecnico/Actualizar">
-                                <i class="bi bi-arrow-repeat me-3 fs-5"></i> Actualizar Estado
-                            </a>
-                        </li>
                     </ul>
                 </div>
 

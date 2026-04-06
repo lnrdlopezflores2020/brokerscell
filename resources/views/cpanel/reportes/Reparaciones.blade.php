@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reporte de Clientes</title>
+    <title>Historial Reparaciones</title>
     <style>
         {{ file_get_contents(public_path('assets/css/Style_reporte.css')) }}
     </style>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\ClientesController;
 use App\Http\Controllers\DispositivosController;
 use App\Http\Controllers\HomeController;
@@ -96,16 +97,20 @@ Route::middleware(['auth', 'role:tecnico'])->prefix('tecnico')->group(function (
 
 Route::middleware(['auth', 'role:cliente'])->prefix('cliente')->group(function () {
     Route::resource('/',DashboardClientescoltroller::class);
+
     Route::resource('/Mis-reparaciones', \App\Http\Controllers\ConsultasController::class);
+
     Route::get('perfilUsuario', function () {
         return view('cpanel/usuarios/perfilusuario');
     })->name('perfilCliente');
+
     Route::get('/cliente/nota-entrega/{id}', [ReportesController::class, 'generarNotaEntrega'])
         ->name('cliente.nota_entrega');
 
-    Route::get('soporte', function () {
-        return view('cpanel/ChatBot/Chatbot');
-    })->name('cliente.soporte');
+    Route::get('/asistente', [ChatbotController::class, 'index'])->name('chatbot.index');
+
+// Endpoint para enviar mensajes (AJAX)
+    Route::post('/asistente/enviar', [ChatbotController::class, 'sendMessage'])->name('chatbot.send');
 });
 
 
