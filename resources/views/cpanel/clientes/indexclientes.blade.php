@@ -42,9 +42,12 @@
                 </div>
             </div>
 
-            <div class="table-responsive">
+            {{-- SE AGREGÓ EL SCROLL VERTICAL AQUÍ --}}
+            <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
                 <table class="table table-hover table-bordered align-middle">
-                    <thead class="table-dark">
+                    
+                    {{-- SE FIJÓ EL ENCABEZADO AQUÍ --}}
+                    <thead class="table-dark" style="position: sticky; top: 0; z-index: 1;">
                     <tr>
                         <th scope="col"># Cliente</th>
                         <th scope="col"><i class="bi bi-person-badge-fill"></i> Usuario Asociado</th>
@@ -104,7 +107,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center py-4 text-muted">
+                            <td colspan="9" class="text-center py-4 text-muted">
                                 No hay clientes registrados en este momento.
                             </td>
                         </tr>

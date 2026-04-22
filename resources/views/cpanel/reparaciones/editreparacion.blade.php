@@ -91,7 +91,7 @@
 
                             {{-- BOTONES DE ACCIÓN --}}
                             <div class="d-flex justify-content-between align-items-center mt-4">
-                                <a href="{{ url('/tecnico/Actualizar') }}" class="btn btn-outline-secondary">
+                                <a href="{{ url('/tecnico/reparaciones') }}" class="btn btn-outline-secondary">
                                     <i class="bi bi-arrow-left"></i> Volver
                                 </a>
                                 <button type="submit" class="btn btn-primary px-5 btn-lg">

@@ -6,7 +6,7 @@
         {{-- 1. ENCABEZADO DE BIENVENIDA --}}
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="fw-bold text-dark">Hola, {{ auth()->user()->datosTecnico-> nombre ?? 'tecnico' }} 👋</h2>
+                <h2 class="fw-bold text-dark">Hola, {{ auth()->user()->datosTecnico->nombre ?? 'tecnico' }} 👋</h2>
                 <p class="text-muted">Aquí tienes tus reparaciones asignadas para hoy.</p>
             </div>
             <div class="date text-end">
@@ -81,9 +81,12 @@
                 </div>
             </div>
 
-            <div class="table-responsive">
+            {{-- SE AGREGÓ EL SCROLL VERTICAL AQUÍ --}}
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light text-secondary small">
+                    
+                    {{-- SE FIJÓ EL ENCABEZADO AQUÍ --}}
+                    <thead class="table-light text-secondary small" style="position: sticky; top: 0; z-index: 1;">
                     <tr>
                         <th scope="col">Folio</th>
                         <th scope="col">Dispositivo / Modelo</th>
@@ -142,13 +145,13 @@
                                     };
                                 @endphp
                                 <span class="badge rounded-pill {{ $estadoColor }} px-3 py-2">
-        {{ $item->est_reparacion }}
-    </span>
+                                    {{ $item->est_reparacion }}
+                                </span>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">
+                            <td colspan="5" class="text-center py-5 text-muted">
                                 No hay reparaciones pendientes en el taller.
                             </td>
                         </tr>
@@ -163,4 +166,4 @@
             </div>
         </div>
     </div>
-@endsection
+@endsection     
