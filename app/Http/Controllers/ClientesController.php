@@ -1,11 +1,16 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Exports\ClientesExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Cliente;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Mail; // IMPORTACIÓN PARA CORREOS
+use App\Mail\BienvenidaClienteMail; // IMPORTACIÓN DE LA PLANTILLA DE CORREO
+use Exception;
 
 class ClientesController extends Controller
 {
@@ -19,13 +24,11 @@ class ClientesController extends Controller
 
     public function create()
     {
-        // NOTA: Asegúrate que en tu BD el rol sea 'cliente' o 'Cliente'
         $usuariosClientes = User::where('rol_usuario', 'cliente')
             ->orWhere('rol_usuario', 'Cliente')
-            ->select('ID_usuario', 'emai') // Si cambiaste emai a email en BD, ajusta aquí
+            ->select('ID_usuario', 'emai') // Ajusta 'emai' si en BD es 'email'
             ->get();
 
-        // Enviamos un objeto vacío para que el formulario no falle al intentar leer propiedades
         $fila = new \stdClass();
 
         return view('cpanel/clientes/createclientes', compact('usuariosClientes', 'fila'));
@@ -36,24 +39,17 @@ class ClientesController extends Controller
         $Usuario = $request->input('usuario_fk');
 
         // --- VALIDACIÓN DE DUPLICADOS ---
-        // Verificamos si ya existe ese usuario asociado
         $existe = DB::table('cliente')
             ->where('usuario_fk', $Usuario)
             ->exists();
 
         if ($existe) {
-            // CORRECCIÓN IMPORTANTE:
-            // Usamos back() para volver al formulario.
-            // Usamos withInput() para recuperar los datos escritos (nombre, apellido, etc).
             return back()
                 ->withInput()
                 ->with('error', 'Error: El usuario seleccionado ya tiene un cliente asignado.');
         }
-        // ---------------------------------
 
         // 2. Insertamos en la Base de Datos
-        // Nota: Si usas DB::table, los campos 'created_at' y 'updated_at' no se llenan solos.
-        // Si los necesitas, agrega: 'created_at' => now(),
         DB::table('cliente')->insert([
             'nombre'     => $request->input('nombre'),
             'apellido'   => $request->input('apellido'),
@@ -62,15 +58,28 @@ class ClientesController extends Controller
             'num_ext'    => $request->input('num_ext'),
             'num_int'    => $request->input('num_int'),
             'usuario_fk' => $Usuario,
-            // 'created_at' => now(), // Descomenta esto si tu tabla usa timestamps
-            // 'updated_at' => now(),
         ]);
 
-        // 3. REDIRECCIÓN SEGURA (Tal como la definiste, está perfecta)
+        // --- 3. ENVÍO DE CORREO DE BIENVENIDA ---
+        try {
+            // Buscamos el correo en la tabla de usuarios asociados
+            $userAsociado = User::find($Usuario);
+            
+            // Verificamos que exista y tenga correo (emai / email)
+            if ($userAsociado && $userAsociado->emai) { 
+                Mail::to($userAsociado->emai)->send(new BienvenidaClienteMail($request->input('nombre')));
+            }
+        } catch (Exception $e) {
+            // Si falla el envío (ej. credenciales SMTP incorrectas), no bloqueamos el sistema.
+            // Solo registramos el error internamente.
+            \Log::error('Error al enviar correo de bienvenida: ' . $e->getMessage());
+        }
+
+        // 4. REDIRECCIÓN SEGURA
         if (auth()->user()->rol_usuario === 'administrador') {
-            return redirect('/admon/clientes')->with('success', 'Cliente guardado correctamente.');
+            return redirect('/admon/clientes')->with('success', 'Cliente guardado correctamente. Se ha enviado un correo de bienvenida.');
         } else {
-            return redirect('/tecnico/clientes')->with('success', 'Cliente guardado correctamente.');
+            return redirect('/tecnico/clientes')->with('success', 'Cliente guardado correctamente. Se ha enviado un correo de bienvenida.');
         }
     }
 
@@ -85,7 +94,6 @@ class ClientesController extends Controller
     }
 
     public function edit($id){
-        // Mantenemos tu estructura DB::table
         $fila = DB::table('cliente')->where('ID_client', '=', $id)->first();
 
         $usuariosClientes = User::where('rol_usuario', 'cliente')
@@ -97,18 +105,16 @@ class ClientesController extends Controller
     }
 
     public function update(Request $request, $id){
-        // Obtenemos todos los datos del formulario HTML
         $datosUsuario = request()->except(['_token','_method']);
 
-        // Actualizamos mapeando: Columna_BD => $datosUsuario['name_del_html']
         DB::table('cliente')->where('ID_client', $id)->update([
             'nombre'     => $datosUsuario['nombre'],
             'apellido'   => $datosUsuario['apellido'],
             'telefono'   => $datosUsuario['telefono'],
             'direccion'  => $datosUsuario['direccion'],
-            'num_ext'    => $datosUsuario['num_ext'],    // HTML: name="num_ext"
-            'num_int'    => $datosUsuario['num_int'],    // HTML: name="num_int"
-            'usuario_fk' => $datosUsuario['usuario_fk']  // HTML: name="usuario_fk"
+            'num_ext'    => $datosUsuario['num_ext'],
+            'num_int'    => $datosUsuario['num_int'],
+            'usuario_fk' => $datosUsuario['usuario_fk']
         ]);
 
         if (auth()->user()->rol_usuario === 'administrador') {
@@ -120,7 +126,6 @@ class ClientesController extends Controller
 
     public function exportarExcel()
     {
-        // El segundo parámetro es el nombre del archivo que se descargará
         return Excel::download(new ClientesExport, 'Reporte_Solo_Clientes.xlsx');
     }
 }

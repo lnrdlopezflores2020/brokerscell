@@ -1,68 +1,191 @@
 @extends('cpanel/plantilla')
 @section('title', 'tecnicos')
 @section('content')
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="card-title h1 m-0"><i class="bi bi-people-fill me-2"></i>Técnicos</h4>
+    {{-- Contenedor principal adaptable a la altura de la pantalla --}}
+    <div class="container-fluid py-4 d-flex flex-column" style="min-height: calc(100vh - 80px);">
+        
+        <div class="card shadow-sm border-0 rounded-4 bg-body flex-grow-1 d-flex flex-column overflow-hidden">
+            
+            {{-- Barra decorativa superior --}}
+            <div style="height: 6px; background: linear-gradient(90deg, #0d6efd, #0d6efd);"></div>
+
+            {{-- ENCABEZADO DE LA TARJETA --}}
+            <div class="card-header bg-transparent border-bottom pt-4 pb-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                 <div>
-                    <a class="btn btn-primary" href="/admon/tecnicos/create" role="button">
-                        <i class="bi bi-plus-lg"></i> Agregar Técnico
+                    <h4 class="card-title fw-bold text-body m-0">
+                        <i class="bi bi-people-fill text-brand-purple me-2"></i>Directorio de Técnicos
+                    </h4>
+                    <p class="text-secondary small mb-0 mt-1">Gestión del personal autorizado en el taller.</p>
+                </div>
+                <div>
+                    <a class="btn btn-brand-purple fw-bold shadow-sm d-flex align-items-center" href="/admon/tecnicos/create">
+                        <i class="bi bi-plus-circle-fill me-2"></i> Agregar Técnico
                     </a>
                 </div>
             </div>
 
-            {{-- SE AGREGÓ EL SCROLL VERTICAL AQUÍ --}}
-            <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
-                <table class="table table-hover table-bordered align-middle">
-                    
-                    {{-- SE FIJÓ EL ENCABEZADO AQUÍ --}}
-                    <thead class="table-dark" style="position: sticky; top: 0; z-index: 1;">
-                    <tr>
-                        <th scope="col"># Técnico</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Apellido</th>
-                        <th scope="col">Teléfono</th>
-                        <th scope="col" class="text-center" style="width: 150px;">Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @forelse($data as $fila)
-                        <tr>
-                            <td class="fw-bold"> <span class="badge bg-secondary">{{$fila->ID_tec}} </span></td>
-                            <td> {{$fila->nombre}} </td>
-                            <td> {{$fila->apellido}} </td>
-                            <td> {{$fila->tel_tecnico}} </td>
-                            <td class="text-center">
-                                <div class="btn-group" role="group">
-                                    {{-- Botón Editar --}}
-                                    <a class="btn btn-sm btn-outline-info" href="{{url('/admon/tecnicos/'.$fila->ID_tec.'/edit')}}" title="Editar">
-                                        Editar <i class="bi bi-pencil-square"></i>
-                                    </a>
+            {{-- CUERPO DE LA TARJETA (Flex para habilitar el scroll dinámico) --}}
+            <div class="card-body p-0 d-flex flex-column flex-grow-1" style="height: 0;">
+                
+                {{-- Contenedor de la tabla con Scroll automático --}}
+                <div class="table-responsive flex-grow-1" style="overflow-y: auto;">
+                    <table class="table table-hover align-middle mb-0">
+                        
+                        {{-- Encabezado pegajoso estilo moderno --}}
+                        <thead class="table-light text-secondary small text-uppercase" style="position: sticky; top: 0; z-index: 1;">
+                            <tr>
+                                <th scope="col" class="ps-4 fw-semibold border-0 py-3 text-center" style="width: 100px;">ID</th>
+                                <th scope="col" class="fw-semibold border-0 py-3">Nombre</th>
+                                <th scope="col" class="fw-semibold border-0 py-3">Apellido</th>
+                                <th scope="col" class="fw-semibold border-0 py-3"><i class="bi bi-telephone-fill me-1"></i> Teléfono</th>
+                                <th scope="col" class="text-center pe-4 fw-semibold border-0 py-3" style="width: 150px;">Acciones</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody class="border-top-0">
+                            @forelse($data as $fila)
+                                <tr>
+                                    {{-- ID Badge --}}
+                                    <td class="ps-4 text-center">
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle px-2 py-1">
+                                            #{{ str_pad($fila->ID_tec, 4, '0', STR_PAD_LEFT) }}
+                                        </span>
+                                    </td>
+                                    
+                                    {{-- Datos --}}
+                                    <td class="fw-medium text-body"> {{$fila->nombre}} </td>
+                                    <td class="text-body"> {{$fila->apellido}} </td>
+                                    <td class="text-body"> {{$fila->tel_tecnico}} </td>
+                                    
+                                    {{-- Acciones (Botones estilizados) --}}
+                                    <td class="text-center pe-4">
+                                        <div class="btn-group shadow-sm" role="group">
+                                            {{-- Botón Editar --}}
+                                            <a class="btn btn-sm btn-light border text-primary hover-primary px-3" href="{{url('/admon/tecnicos/'.$fila->ID_tec.'/edit')}}" data-bs-toggle="tooltip" title="Editar Técnico">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
 
-                                    {{-- Botón Eliminar --}}
-                                    <form action="{{url('/admon/tecnicos', $fila->ID_tec)}}" method="post" class="d-inline">
-                                        @csrf
-                                        {{method_field('DELETE')}}
-                                        <button class="btn btn-sm btn-outline-danger" type="submit"
-                                                onclick="return confirm('¿Estás seguro de eliminar al tecnico {{$fila->nombre}} {{$fila->apellido}}? Esta acción no se puede deshacer.')" title="Eliminar">
-                                            Eliminar<i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            {{-- SE CORRIGIÓ EL COLSPAN A 5 --}}
-                            <td colspan="5" class="text-center py-4 text-muted">
-                                No hay técnicos registrados en este momento.
-                            </td>
-                        </tr>
-                    @endforelse
-                    </tbody>
-                </table>
+                                            {{-- Botón Eliminar modificado para SweetAlert --}}
+                                            <form action="{{url('/admon/tecnicos', $fila->ID_tec)}}" method="post" class="d-inline m-0 p-0 form-delete">
+                                                @csrf
+                                                {{method_field('DELETE')}}
+                                                <button class="btn btn-sm btn-light border text-danger hover-danger btn-delete px-3" type="button" 
+                                                        data-nombre="{{$fila->nombre}} {{$fila->apellido}}" 
+                                                        data-bs-toggle="tooltip" title="Eliminar Técnico">
+                                                    <i class="bi bi-trash3-fill"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                {{-- Estado Vacío (Empty State) --}}
+                                <tr>
+                                    <td colspan="5" class="text-center py-5">
+                                        <div class="d-flex flex-column align-items-center justify-content-center">
+                                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                                <i class="bi bi-person-badge display-4 text-secondary opacity-50"></i>
+                                            </div>
+                                            <h5 class="fw-bold text-body mb-1">No hay técnicos registrados</h5>
+                                            <p class="text-secondary mb-3">Agrega personal técnico para comenzar a asignar reparaciones.</p>
+                                            <a class="btn btn-brand-purple rounded-pill px-4 shadow-sm" href="/admon/tecnicos/create">
+                                                <i class="bi bi-plus-lg me-2"></i>Agregar Técnico
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+
+    {{-- Estilos personalizados de la marca --}}
+    <style>
+        .text-brand-purple { color: #0d6efd !important; }
+        .btn-brand-purple { 
+            background-color: #0d6efd !important; 
+            color: white !important; 
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-brand-purple:hover {
+            background-color: #0d6efd !important;
+            transform: translateY(-1px);
+        }
+        
+        /* Efectos hover para los botones de la tabla */
+        .hover-primary:hover { background-color: #0d6efd !important; color: white !important; border-color: #0d6efd !important; }
+        .hover-danger:hover { background-color: #dc3545 !important; color: white !important; border-color: #dc3545 !important; }
+    </style>
+
+    {{-- LIBRERÍA SWEETALERT 2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {{-- SCRIPTS FUNCIONALES --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // 1. Inicializar tooltips de Bootstrap
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+
+            // 2. Confirmación de Eliminación con SweetAlert
+            const deleteButtons = document.querySelectorAll('.btn-delete');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const form = this.closest('form');
+                    const nombreTecnico = this.getAttribute('data-nombre');
+                    
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: `Estás a punto de eliminar al técnico ${nombreTecnico}. Esta acción es irreversible y podría afectar las reparaciones asignadas a él.`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#dc3545', // Rojo peligro
+                        cancelButtonColor: '#6c757d', // Gris secundario
+                        confirmButtonText: '<i class="bi bi-trash3-fill"></i> Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+
+            // 3. Configuración general para Toasts de Éxito/Error
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'bottom-end',
+                showConfirmButton: false,
+                timer: 3500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            // 4. Mostrar Toast de Éxito
+            @if(session('success'))
+                Toast.fire({
+                    icon: 'success',
+                    title: '{{ session('success') }}'
+                });
+            @endif
+
+            // 5. Mostrar Toast de Error
+            @if(session('error'))
+                Toast.fire({
+                    icon: 'error',
+                    title: '{{ session('error') }}'
+                });
+            @endif
+        });
+    </script>
 @endsection

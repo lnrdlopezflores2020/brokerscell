@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\DashboardClientescoltroller;
-use App\Http\Controllers\ConsultasController;
 use App\Http\Controllers\RespaldosController;
 
 use App\Http\Controllers\ActualizarReparacionesController;
@@ -70,8 +69,6 @@ Route::middleware(['auth', 'role:administrador'])->prefix('admon')->group(functi
     Route::resource('dispositivos', DispositivosController::class);
     Route::resource('tecnicos', TecnicosController::class);
     Route::resource('reparaciones', ReparacionesController::class);
-    Route::get('respaldos', [RespaldosController::class, 'index'])->name('admon.respaldos');
-    Route::post('respaldos/descargar', [RespaldosController::class, 'descargar'])->name('admon.respaldo.descargar');
 
 });
 
@@ -107,10 +104,10 @@ Route::middleware(['auth', 'role:cliente'])->prefix('cliente')->group(function (
     Route::get('/cliente/nota-entrega/{id}', [ReportesController::class, 'generarNotaEntrega'])
         ->name('cliente.nota_entrega');
 
-    Route::get('/asistente', [ChatbotController::class, 'index'])->name('chatbot.index');
-
-// Endpoint para enviar mensajes (AJAX)
-    Route::post('/asistente/enviar', [ChatbotController::class, 'sendMessage'])->name('chatbot.send');
+    Route::get('/asistente', [App\Http\Controllers\ChatbotController::class, 'index'])->name('chatbot.index');
+    
+    // Ruta POST para PROCESAR los mensajes por JavaScript/AJAX
+    Route::post('/chatbot/procesar', [App\Http\Controllers\ChatbotController::class, 'procesarMensaje']);
 });
 
 

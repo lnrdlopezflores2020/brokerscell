@@ -5,9 +5,9 @@
         <div class="container-fluid py-4 w-100" style="min-width: 320px;">
 
             {{-- ENCABEZADO --}}
-            <div class="row mb-5 border-bottom pb-3 align-items-end">
+            <div class="row mb-4 border-bottom pb-3 align-items-end">
                 <div class="col-md-8">
-                    <h6 class="text-uppercase text-primary fw-bold mb-1 small ls-1">PANEL DE CLIENTE</h6>
+                    <h6 class="text-uppercase text-brand-blue fw-bold mb-1 small ls-1">PANEL DE CLIENTE</h6>
                     <h2 class="fw-bold text-dark mb-0">Mis Reparaciones</h2>
                 </div>
                 <div class="col-md-4 text-md-end mt-3 mt-md-0">
@@ -16,21 +16,34 @@
                             USUARIO ACTIVO
                         </small>
                         <div class="fw-bold text-dark">
-                            <i class="bi bi-person-circle text-primary me-1"></i> {{ auth()->user()->name }}
+                            <i class="bi bi-person-circle text-brand-purple me-1"></i> {{ auth()->user()->name }}
                         </div>
                     </div>
                 </div>
             </div>
 
             @if($reparaciones->isEmpty())
-                <div class="alert alert-secondary text-center border-0 shadow-sm p-5 rounded-4 bg-light">
+                <div class="alert alert-secondary text-center border-0 shadow-sm p-5 rounded-4 bg-light mt-4">
                     <i class="bi bi-tools display-4 text-muted opacity-50 mb-3"></i>
                     <h4 class="fw-bold text-muted">Sin reparaciones activas</h4>
                 </div>
             @else
+                
+                {{-- BARRA DE BÚSQUEDA --}}
+                <div class="row mb-4">
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="input-group shadow-sm border border-subtle bg-white rounded-pill overflow-hidden focus-ring-purple">
+                            <span class="input-group-text bg-white border-0 text-brand-purple ps-4">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text" id="searchFolio" class="form-control border-0 shadow-none bg-white py-2" placeholder="Buscar por número de orden (Ej: 15)...">
+                        </div>
+                    </div>
+                </div>
+
                 {{-- CONTENEDOR CON SCROLL PARA LAS REPARACIONES --}}
                 <div style="max-height: 600px; overflow-y: auto; overflow-x: hidden; padding: 10px; margin: -10px;">
-                    <div class="d-flex flex-column gap-3">
+                    <div class="d-flex flex-column gap-3" id="repairsContainer">
                         @foreach($reparaciones as $item)
                             @php
                                 $color = 'secondary';
@@ -39,12 +52,15 @@
                                 elseif($item->est_reparacion == 'En Reparacion') { $color = 'primary'; $icon = 'bi-wrench'; }
                                 elseif($item->est_reparacion == 'Terminado') { $color = 'success'; $icon = 'bi-check-circle-fill'; }
                                 elseif($item->est_reparacion == 'Entregado') { $color = 'dark'; $icon = 'bi-archive-fill'; }
+                                
+                                // Folio formateado para búsqueda
+                                $folioFormateado = str_pad($item->ID_rep, 6, '0', STR_PAD_LEFT);
                             @endphp
 
-                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden w-100">
+                            {{-- Se agregó la clase 'repair-card' y el 'data-folio' para la búsqueda JS --}}
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden w-100 repair-card" data-folio="{{ $item->ID_rep }} {{ $folioFormateado }}">
                                 <div class="card-body p-4">
-                                    {{-- USAMOS ROW DE BOOTSTRAP: --}}
-                                    {{-- En pantallas pequeñas (col-12) se apilan. En grandes (col-lg-3) se ponen al lado. --}}
+                                    {{-- USAMOS ROW DE BOOTSTRAP --}}
                                     <div class="row g-4">
 
                                         {{-- 1. DISPOSITIVO --}}
@@ -56,7 +72,7 @@
                                             {{-- CONTENIDO (Abajo) --}}
                                             <div>
                                             <span class="badge bg-light text-dark border mb-1">
-                                                #{{ str_pad($item->ID_rep, 6, '0', STR_PAD_LEFT) }}
+                                                #{{ $folioFormateado }}
                                             </span>
                                                 <h5 class="fw-bold text-dark mb-0">
                                                     {{ $item->dispositivo->marca }} {{ $item->dispositivo->modelo }}
@@ -88,7 +104,7 @@
                                                         ENTREGA
                                                     </div>
                                                     {{-- CONTENIDO --}}
-                                                    <div class="fw-bold text-primary">
+                                                    <div class="fw-bold text-brand-blue">
                                                         {{ \Carbon\Carbon::parse($item->fec_est_entrega)->format('d M') }}
                                                     </div>
                                                 </div>
@@ -117,13 +133,20 @@
                                                     <i class="bi {{ $icon }} me-2"></i> {{ strtoupper($item->est_reparacion) }}
                                                 </div>
 
-                                                @if($item->est_reparacion == 'Terminado' || $item->est_reparacion == 'Entregado')
-                                                    {{-- BOTÓN MODIFICADO PARA EL TUTORIAL --}}
+                                                {{-- LÓGICA DE BOTONES --}}
+                                                @if($item->est_reparacion == 'Terminado')
+                                                    {{-- BOTÓN ACTIVO --}}
                                                     <button onclick="mostrarInstrucciones('{{ route('cliente.nota_entrega', $item->ID_rep) }}', '{{ str_pad($item->ID_rep, 6, '0', STR_PAD_LEFT) }}')"
                                                             class="btn btn-outline-dark btn-sm w-100 fw-bold">
-                                                        <i class="bi bi-info-circle me-1"></i> Obtener Nota
+                                                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> Obtener Nota
+                                                    </button>
+                                                @elseif($item->est_reparacion == 'Entregado')
+                                                    {{-- BOTÓN BLOQUEADO: Ya fue entregado --}}
+                                                    <button class="btn btn-secondary btn-sm w-100 fw-bold text-white opacity-75" disabled title="El equipo ya fue entregado al cliente">
+                                                        <i class="bi bi-check2-all me-1"></i> Equipo Entregado
                                                     </button>
                                                 @else
+                                                    {{-- BOTÓN BLOQUEADO: Sigue en proceso --}}
                                                     <button class="btn btn-light btn-sm w-100 text-muted border" disabled>
                                                         <span class="spinner-grow spinner-grow-sm me-1"></span> Procesando
                                                     </button>
@@ -137,12 +160,24 @@
                                 <div class="bg-{{ $color }}" style="height: 5px;"></div>
                             </div>
                         @endforeach
+                        
+                        {{-- MENSAJE DE SIN RESULTADOS (Oculto por defecto) --}}
+                        <div id="noResultsMsg" class="alert alert-light text-center border shadow-sm p-4 rounded-4" style="display: none;">
+                            <i class="bi bi-search text-muted fs-1 mb-2 d-block"></i>
+                            <h6 class="fw-bold text-muted mb-0">No se encontró ninguna reparación con ese folio.</h6>
+                        </div>
                     </div>
                 </div>
             @endif
         </div>
 
         <style>
+            /* Efecto visual al enfocar el input de búsqueda */
+            .focus-ring-purple:focus-within {
+                border-color: var(--brand-purple) !important;
+                box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.15) !important;
+            }
+
             /* Solo poner linea divisoria en pantallas grandes (Desktop) */
             @media (min-width: 992px) {
                 .border-end-lg {
@@ -155,6 +190,41 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script>
+            // === SCRIPT DE BÚSQUEDA EN TIEMPO REAL ===
+            document.addEventListener('DOMContentLoaded', function() {
+                const searchInput = document.getElementById('searchFolio');
+                const repairCards = document.querySelectorAll('.repair-card');
+                const noResultsMsg = document.getElementById('noResultsMsg');
+
+                if(searchInput) {
+                    searchInput.addEventListener('input', function(e) {
+                        const searchTerm = e.target.value.trim().toLowerCase();
+                        let visibleCards = 0;
+
+                        repairCards.forEach(card => {
+                            // Extrae el atributo data-folio (tiene el ID puro y el formateado ej: "15 000015")
+                            const folio = card.getAttribute('data-folio').toLowerCase();
+                            
+                            // Comprueba si lo escrito coincide con alguna parte del folio
+                            if(folio.includes(searchTerm)) {
+                                card.style.display = ''; // Muestra la tarjeta
+                                visibleCards++;
+                            } else {
+                                card.style.display = 'none'; // Oculta la tarjeta
+                            }
+                        });
+
+                        // Muestra u oculta el mensaje de "Sin resultados"
+                        if(visibleCards === 0 && searchTerm !== '') {
+                            noResultsMsg.style.display = 'block';
+                        } else {
+                            noResultsMsg.style.display = 'none';
+                        }
+                    });
+                }
+            });
+
+            // === FUNCIÓN PARA OBTENER NOTA ===
             function mostrarInstrucciones(urlPdf, folio) {
                 Swal.fire({
                     title: '<strong>Instrucciones de Entrega</strong>',
@@ -195,7 +265,8 @@
                     preConfirm: () => {
                         // NUMERO DE TELEFONO CONFIGURADO
                         const telefono = '5212482660871';
-                        const mensaje = `Hola SoluxMovil, envío mi nota de entrega con Folio #${folio} para su impresión.`;
+                        // Mensaje adaptado a Brokerscell
+                        const mensaje = `Hola Brokerscell, envío mi nota de entrega con Folio #${folio} para su impresión.`;
 
                         // Abrir WhatsApp
                         window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`, '_blank');

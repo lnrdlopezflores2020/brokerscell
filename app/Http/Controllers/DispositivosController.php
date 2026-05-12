@@ -60,7 +60,7 @@ class DispositivosController extends Controller
             ->get();
 
         // 3. Retornamos la vista pasando ambas variables
-        return view('cpanel.dispositivos.editdispositivos', compact('dispositivo', 'clientes'));
+        return view('cpanel/dispositivos/editdispositivos', compact('dispositivo', 'clientes'));
     }
 
     /**
@@ -95,7 +95,7 @@ class DispositivosController extends Controller
         DB::table('dispositivo')->where('ID_tel', '=', $id)->delete();
 
 
-        return redirect('/tecnico/dispositivos')->with('success', 'Cliente eliminado correctamente.');
+        return redirect('/tecnico/dispositivos')->with('success', 'Dispositivo eliminado correctamente.');
 
     }
 }

@@ -22,41 +22,71 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // 1. Definimos la configuración del Toast UNA sola vez
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'bottom-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // 1. CONFIRMACIÓN ANTES DE GUARDAR
+            const formClientes = document.getElementById('formClientes');
+            if(formClientes) {
+                formClientes.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Detiene el envío automático
+                    
+                    Swal.fire({
+                        title: '¿Guardar cliente?',
+                        text: "Verifica que los datos ingresados sean correctos.",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#6f42c1', // Morado Brokerscell
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: '<i class="bi bi-save"></i> Sí, guardar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Mostrar pequeño loader mientras procesa
+                            Swal.fire({
+                                title: 'Guardando...',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                            formClientes.submit(); // Envía el formulario
+                        }
+                    });
+                });
             }
-        });
 
-        // 2. Bloque para mensaje de ÉXITO
-        @if(session('success'))
-        Toast.fire({
-            icon: 'success',
-            title: '{{ session('success') }}'
-        });
-        @endif
+            // 2. MENSAJE DE ÉXITO
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Operación Exitosa!',
+                    text: '{{ session('success') }}',
+                    confirmButtonColor: '#6f42c1',
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            @endif
 
-        // 3. Bloque para mensaje de ERROR (El que faltaba)
-        @if(session('error'))
-        Toast.fire({
-            icon: 'error',
-            title: '{{ session('error') }}'
-        });
-        @endif
+            // 3. MENSAJE DE ERROR
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '{{ session('error') }}',
+                    confirmButtonColor: '#dc3545'
+                });
+            @endif
 
-        // 4. (Opcional) Bloque para errores de validación de formulario estándar
-        @if($errors->any())
-        Toast.fire({
-            icon: 'warning',
-            title: 'Por favor corrige los errores en el formulario.'
+            // 4. ERRORES DE VALIDACIÓN (Si faltan campos)
+            @if($errors->any())
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Información incompleta',
+                    text: 'Por favor, revisa los campos en rojo para poder continuar.',
+                    confirmButtonColor: '#ffc107'
+                });
+            @endif
+            
         });
-        @endif
     </script>
 @endsection

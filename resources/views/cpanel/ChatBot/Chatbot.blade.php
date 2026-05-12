@@ -3,158 +3,178 @@
 @section('title', 'Asistente IA')
 
 @section('content')
-    <div class="container-fluid p-0" style="background-color: #131314; height: 90vh;">
-
-        {{-- ÁREA DEL CHAT --}}
-        <div id="chat-container" class="d-flex flex-column p-4 overflow-auto" style="height: 80%; scroll-behavior: smooth;">
-
-            {{-- Mensaje de Bienvenida --}}
-            <div class="d-flex align-items-start mb-4">
-                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
-                     style="width: 40px; height: 40px; background: linear-gradient(135deg, #4285f4, #d96570);">
-                    <i class="bi bi-stars text-white"></i>
-                </div>
-                <div class="text-white">
-                    <div class="fw-bold mb-1">SoluxBot</div>
-                    <div class="p-3 rounded-4" style="background-color: #1e1f20; max-width: 600px; line-height: 1.6;">
-                        ¡Hola! Soy la IA de SoluxMovil 🤖. <br>
-                        Puedo darte presupuestos estimados al instante. <br>
-                        Ejemplo: <i>"¿Cuánto cuesta cambiar la pantalla de un iPhone 11?"</i>
+<div class="container-fluid py-4 h-100">
+    <div class="row justify-content-center h-100">
+        <div class="col-lg-8 col-xl-7 d-flex flex-column" style="height: calc(100vh - 120px);">
+            
+            {{-- ENCABEZADO DEL CHAT --}}
+            <div class="card shadow-sm border-0 rounded-top-4 bg-body z-1">
+                <div style="height: 6px; background: linear-gradient(90deg, var(--brand-purple, #0d6efd), var(--brand-blue, #0d6efd));"></div>
+                <div class="card-body p-3 px-4 d-flex align-items-center">
+                    <div class="position-relative me-3">
+                        <div class="bg-brand-purple bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: rgba(111, 66, 193, 0.1);">
+                            <i class="bi bi-robot fs-3" style="color: #0d6efd;"></i>
+                        </div>
+                        <span class="position-absolute bottom-0 start-100 translate-middle p-1 bg-success border border-2 border-body rounded-circle"></span>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold text-body m-0">Asistente SoluxMovil</h5>
+                        <p class="text-secondary small m-0">Respuestas rápidas sobre costos y servicios</p>
                     </div>
                 </div>
             </div>
 
-            {{-- AQUÍ SE AGREGARÁN LOS MENSAJES CON JS --}}
+            {{-- ÁREA DE MENSAJES (HISTORIAL) --}}
+            <div class="card shadow-sm border-0 rounded-0 bg-body-tertiary flex-grow-1 overflow-auto p-4" id="chatContainer">
+                
+                {{-- Mensaje de bienvenida del Bot --}}
+                <div class="d-flex mb-4">
+                    <div class="bg-white border shadow-sm rounded-4 rounded-top-0 p-3" style="max-width: 80%;">
+                        <p class="m-0 text-body" style="font-size: 0.95rem;">
+                            ¡Hola, {{ auth()->user()->name ?? 'Cliente' }}! 👋 Soy el asistente virtual de SoluxMovil.<br><br>
+                            Para garantizar total transparencia, puedo informarte sobre los costos estimados de nuestras reparaciones más comunes o explicarte en qué consiste cada servicio.<br><br>
+                            ¿En qué te puedo ayudar hoy?
+                        </p>
+                    </div>
+                </div>
 
-        </div>
-
-        {{-- ÁREA DE INPUT (FLOTANTE) --}}
-        <div class="fixed-bottom p-3 d-flex justify-content-center" style="background: linear-gradient(to top, #131314 80%, transparent);">
-            <div class="input-group" style="max-width: 800px;">
-                <input type="text" id="user-input"
-                       class="form-control border-0 py-3 ps-4 shadow-lg text-white"
-                       placeholder="Escribe tu consulta aquí..."
-                       style="background-color: #1e1f20; border-radius: 30px 0 0 30px; color: white !important;">
-
-                <button class="btn border-0 pe-4 shadow-lg" id="btn-send"
-                        style="background-color: #1e1f20; border-radius: 0 30px 30px 0;">
-                    <i class="bi bi-send-fill fs-5 text-primary"></i>
-                </button>
             </div>
+
+            {{-- ÁREA DE INPUT --}}
+            <div class="card shadow-sm border-0 rounded-bottom-4 bg-body z-1">
+                <div class="card-body p-3">
+                    <form id="chatForm" class="d-flex align-items-center gap-2">
+                        @csrf
+                        <input type="text" id="userInput" class="form-control border-secondary-subtle rounded-pill px-4 py-2 bg-body-tertiary focus-ring-blue" placeholder="Escribe tu pregunta aquí (Ej: ¿Cuánto cuesta cambiar pantalla?)..." required autocomplete="off">
+                        <button type="submit" id="sendBtn" class="btn rounded-circle shadow-sm d-flex align-items-center justify-content-center transition-all" style="width: 45px; height: 45px; background-color: #0d6efd; color: white; border: none;">
+                            <i class="bi bi-send-fill"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
         </div>
-
     </div>
+</div>
 
-    {{-- ESTILOS EXTRA PARA MODO OSCURO --}}
-    <style>
-        /* Scrollbar oscura */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #131314; }
-        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+<style>
+    /* Efecto de foco para el input */
+    .focus-ring-purple:focus {
+        border-color: #0d6efd !important;
+        box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.15) !important;
+        background-color: var(--bs-body-bg) !important;
+    }
+    
+    .transition-all:hover {
+        transform: scale(1.05);
+        background-color: #0d6efd !important;
+    }
 
-        /* Input focus sin borde azul feo */
-        #user-input:focus { box-shadow: none; outline: none; background-color: #2d2e2f; }
-        #user-input::placeholder { color: #888; }
-    </style>
+    /* Animación de "Escribiendo" */
+    .typing-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: #94a3b8;
+        border-radius: 50%;
+        margin: 0 2px;
+        animation: typing 1.4s infinite ease-in-out both;
+    }
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes typing {
+        0%, 80%, 100% { transform: scale(0); }
+        40% { transform: scale(1); }
+    }
+</style>
 
-    {{-- LÓGICA JAVASCRIPT --}}
-    <script>
-        const chatContainer = document.getElementById('chat-container');
-        const userInput = document.getElementById('user-input');
-        const btnSend = document.getElementById('btn-send');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatForm = document.getElementById('chatForm');
+        const chatContainer = document.getElementById('chatContainer');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const csrfToken = document.querySelector('input[name="_token"]').value;
 
-        // Enviar con Enter
-        userInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') sendMessage();
-        });
+        chatForm.addEventListener('submit', async function(e) {
+            e.preventDefault(); // Evita que la página se recargue
 
-        btnSend.addEventListener('click', sendMessage);
+            const texto = userInput.value.trim();
+            if(texto === '') return;
 
-        async function sendMessage() {
-            const text = userInput.value.trim();
-            if (text === '') return;
-
-            // 1. Agregar mensaje del usuario (Derecha)
-            appendMessage('user', text);
+            // 1. Mostrar mensaje del cliente (Alineado a la derecha, color morado)
+            chatContainer.innerHTML += `
+                <div class="d-flex mb-4 justify-content-end">
+                    <div class="text-white shadow-sm rounded-4 rounded-top-0 p-3" style="max-width: 80%; background-color: #6f42c1;">
+                        <p class="m-0" style="font-size: 0.95rem;">${texto}</p>
+                    </div>
+                </div>
+            `;
+            
             userInput.value = '';
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+            hacerScrollAbajo();
 
-            // 2. Mostrar indicador "Escribiendo..."
-            const loadingId = appendLoading();
-            scrollToBottom();
+            // 2. Mostrar indicador de "Escribiendo..."
+            const typingId = 'typing-' + Date.now();
+            chatContainer.innerHTML += `
+                <div class="d-flex mb-4" id="${typingId}">
+                    <div class="bg-white border shadow-sm rounded-4 rounded-top-0 p-3 d-flex align-items-center gap-1" style="max-width: 80%; height: 42px;">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            hacerScrollAbajo();
 
+            // 3. Petición al servidor (Controlador Laravel)
             try {
-                // 3. Petición al Servidor Laravel
-                const response = await fetch("{{ route('chatbot.send') }}", {
+                const response = await fetch('/cliente/chatbot/procesar', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': csrfToken
                     },
-                    body: JSON.stringify({ message: text })
+                    body: JSON.stringify({ mensaje: texto })
                 });
 
                 const data = await response.json();
 
-                // 4. Quitar loading y mostrar respuesta IA
-                document.getElementById(loadingId).remove();
-                appendMessage('bot', data.reply);
+                // Eliminar animación de escribiendo
+                document.getElementById(typingId).remove();
 
+                // 4. Mostrar respuesta del Bot (Alineada a la izquierda, color blanco)
+                chatContainer.innerHTML += `
+                    <div class="d-flex mb-4">
+                        <div class="bg-white border shadow-sm rounded-4 rounded-top-0 p-3" style="max-width: 80%;">
+                            <p class="m-0 text-body" style="font-size: 0.95rem;">${data.respuesta}</p>
+                        </div>
+                    </div>
+                `;
             } catch (error) {
-                document.getElementById(loadingId).remove();
-                appendMessage('bot', 'Lo siento, ocurrió un error. Intenta de nuevo.');
+                document.getElementById(typingId).remove();
+                chatContainer.innerHTML += `
+                    <div class="d-flex mb-4">
+                        <div class="bg-danger text-white border shadow-sm rounded-4 rounded-top-0 p-3" style="max-width: 80%;">
+                            <p class="m-0" style="font-size: 0.95rem;"><i class="bi bi-exclamation-triangle-fill me-2"></i>Hubo un error de conexión. Intenta de nuevo.</p>
+                        </div>
+                    </div>
+                `;
             }
 
-            scrollToBottom();
-        }
+            // Reactivar input y hacer scroll
+            userInput.disabled = false;
+            sendBtn.disabled = false;
+            userInput.focus();
+            hacerScrollAbajo();
+        });
 
-        function appendMessage(role, text) {
-            const div = document.createElement('div');
-            div.className = `d-flex align-items-start mb-4 ${role === 'user' ? 'justify-content-end' : ''}`;
-
-            let avatar = '';
-            let bgClass = role === 'user' ? 'bg-primary text-white' : 'text-white';
-            let style = role === 'user' ? 'border-radius: 20px 20px 5px 20px;' : 'background-color: #1e1f20; border-radius: 20px 20px 20px 5px;';
-
-            // Icono del Bot
-            if (role === 'bot') {
-                avatar = `
-            <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
-                 style="width: 40px; height: 40px; background: linear-gradient(135deg, #4285f4, #d96570); flex-shrink: 0;">
-                <i class="bi bi-stars text-white"></i>
-            </div>`;
-            }
-
-            let content = `
-            ${role === 'bot' ? avatar : ''}
-            <div class="p-3 shadow-sm ${bgClass}" style="max-width: 80%; ${style}">
-                ${text}
-            </div>
-        `;
-
-            div.innerHTML = content;
-            chatContainer.appendChild(div);
-        }
-
-        function appendLoading() {
-            const id = 'loading-' + Date.now();
-            const div = document.createElement('div');
-            div.id = id;
-            div.className = 'd-flex align-items-start mb-4';
-            div.innerHTML = `
-            <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
-                 style="width: 40px; height: 40px; background: linear-gradient(135deg, #4285f4, #d96570);">
-                <i class="bi bi-stars text-white"></i>
-            </div>
-            <div class="p-3 text-white rounded-4" style="background-color: #1e1f20;">
-                <span class="spinner-grow spinner-grow-sm" role="status"></span> Escribiendo...
-            </div>
-        `;
-            chatContainer.appendChild(div);
-            return id;
-        }
-
-        function scrollToBottom() {
+        // Función auxiliar para mantener el scroll siempre abajo
+        function hacerScrollAbajo() {
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
-    </script>
+    });
+</script>
 @endsection

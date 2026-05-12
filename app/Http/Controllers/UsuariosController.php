@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\User;
 
 class UsuariosController extends Controller
 {
@@ -39,11 +40,17 @@ class UsuariosController extends Controller
         return redirect()->route('usuarios.index');
     }
 
-    public function destroy($id){
-        DB::table('usuario')->where('ID_usuario', '=', $id)->delete();
-        return redirect()->route('usuarios.index');
+   public function destroy($id)
+{
+    $usuario = User::findOrFail($id);
+
+    if (strtolower($usuario->rol_usuario) === 'administrador' || strtolower($usuario->rol_usuario) === 'admin') {
+        return redirect()->back()->with('error', 'No tienes permisos para eliminar a un administrador.');
     }
 
+    $usuario->delete();
+    return redirect()->back()->with('success', 'Usuario eliminado correctamente.');
+}
     public function edit($id){
         $fila = DB::table('usuario')->where('ID_usuario', '=', $id)->first();
         return view('cpanel/usuarios/editusuarios',['fila'=>$fila]);

@@ -1,9 +1,19 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield("title") | SoluxMovil Admin</title>
+    
+    {{-- SCRIPT ANTI-PARPADEO: Aplica el tema guardado antes de que la página se dibuje --}}
+    <script>
+        (function() {
+            const temaGuardado = localStorage.getItem('solux_theme');
+            if (temaGuardado === 'dark') {
+                document.documentElement.setAttribute('data-bs-theme', 'dark');
+            }
+        })();
+    </script>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     
@@ -18,10 +28,6 @@
     
     <style>
         /* Ajustes UI para panel de Administración */
-        body {
-            background-color: #f8f9fa; /* Fondo gris muy claro para el área de trabajo */
-        }
-        
         .admin-navbar {
             background-color: #1e293b; /* Azul pizarra oscuro, muy profesional */
             border-bottom: 1px solid #334155;
@@ -49,9 +55,76 @@
             border-left-color: #3b82f6; /* Indicador de página activa */
             font-weight: 600;
         }
+
+        .dropdown-item-theme, .dropdown-item {
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s ease;
+        }
+
+        /* ==================================================================== */
+        /* FORZAR MODO OSCURO SOBRE ELEMENTOS REBELDES */
+        /* ==================================================================== */
+        [data-bs-theme="dark"] body {
+            background-color: #0f172a !important;
+            color: #e2e8f0 !important;
+        }
+
+        /* Tarjetas y Contenedores */
+        [data-bs-theme="dark"] .bg-white, 
+        [data-bs-theme="dark"] .bg-light,
+        [data-bs-theme="dark"] .card,
+        [data-bs-theme="dark"] .card-header,
+        [data-bs-theme="dark"] .card-footer {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f8f9fa !important;
+        }
+
+        /* Textos */
+        [data-bs-theme="dark"] .text-dark,
+        [data-bs-theme="dark"] .text-body {
+            color: #f8f9fa !important;
+        }
+
+        [data-bs-theme="dark"] .text-muted,
+        [data-bs-theme="dark"] .text-secondary {
+            color: #94a3b8 !important;
+        }
+
+        /* FIX DEFINITIVO PARA TABLAS Y HOVER */
+        [data-bs-theme="dark"] .table,
+        [data-bs-theme="dark"] .table > :not(caption) > * > * {
+            background-color: transparent !important;
+            color: #e2e8f0 !important;
+            border-color: #334155 !important;
+            transition: background-color 0.2s ease;
+        }
+
+        [data-bs-theme="dark"] .table-hover > tbody > tr:hover > td,
+        [data-bs-theme="dark"] .table-hover > tbody > tr:hover > th {
+            background-color: #334155 !important; 
+            color: #ffffff !important;
+        }
+
+        [data-bs-theme="dark"] .table-light th,
+        [data-bs-theme="dark"] .table-light td {
+            background-color: #0f172a !important;
+            color: #94a3b8 !important;
+            border-bottom-color: #334155 !important;
+        }
+
+        /* Inputs y Selects */
+        [data-bs-theme="dark"] .form-control,
+        [data-bs-theme="dark"] .form-select,
+        [data-bs-theme="dark"] .input-group-text {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+            color: #f8f9fa !important;
+        }
     </style>
 </head>
-<body>
+<body class="bg-body-tertiary">
 
 <header>
     {{-- Navbar Superior --}}
@@ -72,18 +145,57 @@
             <div class="dropdown">
                 <a class="d-flex align-items-center text-decoration-none" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="d-none d-md-block text-end me-3 text-white">
-                        <span class="d-block small fw-bold">{{ auth()->user()->name ?? 'Administrador' }}</span>
-                        <span class="d-block" style="font-size: 0.75rem; color: #94a3b8;">Configuración</span>
+                        {{-- LÓGICA PARA MOSTRAR EL NOMBRE REAL --}}
+                        @php
+                            $nombreMostrar = auth()->user()->name ?? 'Administrador';
+                            if(auth()->user()->rol_usuario === 'administrador' && auth()->user()->datosAdmin) {
+                                $nombreMostrar = auth()->user()->datosAdmin->nombre . ' ' . auth()->user()->datosAdmin->apellido;
+                            } elseif(auth()->user()->rol_usuario === 'tecnico' && auth()->user()->datosTecnico) {
+                                $nombreMostrar = auth()->user()->datosTecnico->nombre . ' ' . auth()->user()->datosTecnico->apellido;
+                            }
+                        @endphp
+                        
+                        <span class="d-block small fw-bold">{{ $nombreMostrar }}</span>
+                        <span class="d-block text-uppercase" style="font-size: 0.70rem; color: #94a3b8;">{{ auth()->user()->rol_usuario ?? 'Administración' }}</span>
                     </div>
                     <img src="/assets/images/usuario (1).png" alt="Perfil" width="38" height="38" class="rounded-circle border border-secondary bg-white">
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
-                    <li><a class="dropdown-item py-2" href="{{route('perfilUsuario')}}"><i class="bi bi-person me-2 text-secondary"></i>Mi Perfil</a></li>
-                    <li><hr class="dropdown-divider"></li>
+                
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2 p-2" style="min-width: 240px; border-radius: 12px;">
+                    
+                    {{-- SECCIÓN: CUENTA --}}
+                    <li><h6 class="dropdown-header text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px;">Cuenta</h6></li>
+                    <li>
+                        <a class="dropdown-item py-2 rounded" href="{{route('perfilUsuario')}}">
+                            <i class="bi bi-person me-2 text-primary"></i>Mi Perfil
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item py-2 rounded" href="{{ url('/password/reset') }}">
+                            <i class="bi bi-shield-lock me-2 text-success"></i>Cambiar Contraseña
+                        </a>
+                    </li>
+
+                    <li><hr class="dropdown-divider my-2"></li>
+                    
+                    {{-- SECCIÓN: HERRAMIENTAS RÁPIDAS --}}
+                    <li><h6 class="dropdown-header text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px;">Ajustes Visuales</h6></li>
+                    <li>
+                        <div class="dropdown-item py-2 d-flex justify-content-between align-items-center dropdown-item-theme rounded" id="btnTemaGlobal">
+                            <span><i class="bi bi-moon-stars me-2 text-secondary" id="iconoTemaGlobal"></i> Modo Oscuro</span>
+                            <div class="form-check form-switch m-0 p-0">
+                                <input class="form-check-input ms-2" type="checkbox" role="switch" id="switchTemaGlobal" style="cursor: pointer; pointer-events: none;">
+                            </div>
+                        </div>
+                    </li>
+
+                    <li><hr class="dropdown-divider my-2"></li>
+
+                    {{-- SECCIÓN: SALIDA --}}
                     <li>
                         <form action="{{ route('logout') }}" method="POST"> 
                             @csrf
-                            <button type="submit" class="dropdown-item py-2 text-danger fw-medium">
+                            <button type="submit" class="dropdown-item py-2 text-danger fw-medium rounded hover-danger">
                                 <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
                             </button>
                         </form>
@@ -91,7 +203,7 @@
                 </ul>
             </div>
 
-            {{-- Menú Lateral (Offcanvas) --}}
+            {{-- Menú Lateral (Offcanvas) - INTACTO DE ADMIN --}}
             <div class="offcanvas offcanvas-start admin-sidebar text-white" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" style="width: 280px;">
                 <div class="offcanvas-header border-bottom" style="border-color: #334155 !important;">
                     <h6 class="offcanvas-title fw-bold text-uppercase" id="offcanvasNavbarLabel" style="letter-spacing: 1px; color: #94a3b8;">
@@ -144,7 +256,6 @@
 </header>
 
 {{-- CONTENEDOR PRINCIPAL --}}
-{{-- Se eliminó la clase animate-fade-in para carga instantánea --}}
 <div class="main-panel" style="margin-top: 85px; min-height: calc(100vh - 85px);">
     <div class="content-wrapper container-fluid px-3 px-md-4 pb-4">
         @yield('content')
@@ -153,5 +264,42 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 <script src="/assets/js/sript.js" defer></script>
+
+{{-- SCRIPT PARA CONTROL DE MODO OSCURO --}}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const btnTema = document.getElementById('btnTemaGlobal');
+        const switchTema = document.getElementById('switchTemaGlobal');
+        const iconoTema = document.getElementById('iconoTemaGlobal');
+        const html = document.documentElement;
+
+        const temaActual = html.getAttribute('data-bs-theme');
+        if (temaActual === 'dark') {
+            switchTema.checked = true;
+            actualizarIcono('dark');
+        }
+
+        btnTema.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const nuevoTema = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-bs-theme', nuevoTema);
+            switchTema.checked = (nuevoTema === 'dark');
+            localStorage.setItem('solux_theme', nuevoTema);
+            actualizarIcono(nuevoTema);
+        });
+
+        function actualizarIcono(tema) {
+            if (tema === 'dark') {
+                iconoTema.classList.replace('bi-moon-stars', 'bi-sun-fill');
+                iconoTema.classList.remove('text-secondary');
+                iconoTema.classList.add('text-warning');
+            } else {
+                iconoTema.classList.replace('bi-sun-fill', 'bi-moon-stars');
+                iconoTema.classList.remove('text-warning');
+                iconoTema.classList.add('text-secondary');
+            }
+        }
+    });
+</script>
 </body>
 </html>
