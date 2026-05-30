@@ -63,7 +63,7 @@ Route::middleware(['auth', 'role:administrador'])->prefix('admon')->group(functi
     Route::get('reportes/reparaciones', [ReportesController::class, 'GenerarHistorial']);
     Route::get('reportes/nota/{id}', [ReportesController::class, 'generarNota'])->name('admon_reportes.nota');
     Route::get('reportes/excel-clientes', [ClientesController::class, 'exportarExcel'])
-        ->name('reportes.excel');
+        ->name('reportes_clientes.excel');
     
      
 

@@ -38,7 +38,7 @@
                             <a class="btn btn-outline-danger fw-medium d-flex align-items-center" href="{{url('admon/reportes/pdfClientes')}}" target="_blank" title="Exportar a PDF">
                                 <i class="bi bi-file-earmark-pdf-fill me-2"></i> PDF
                             </a>
-                            <a class="btn btn-outline-success fw-medium d-flex align-items-center" href="{{ route('reportes.excel') }}" target="_blank" title="Exportar a Excel">
+                            <a class="btn btn-outline-success fw-medium d-flex align-items-center" href="{{ route('reportes_clientes.excel') }}" target="_blank" title="Exportar a Excel">
                                 <i class="bi bi-file-earmark-excel-fill me-2"></i> Excel
                             </a>
                         </div>
