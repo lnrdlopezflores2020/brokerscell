@@ -43,7 +43,7 @@ class LoginController extends Controller
             $user->save();
 
             try {
-                Mail::to($request->email)->send(new Codigo2FAMail($codigo));
+               // Mail::to($request->email)->send(new Codigo2FAMail($codigo));
             } catch (\Exception $e) {
                 // COMENTA O BORRA ESTO TEMPORALMENTE:
                 // return back()->withErrors(['email' => 'No se pudo enviar el correo...']);
