@@ -35,7 +35,7 @@
             
         </div>
         <div class="footer">
-            &copy; {{ date('Y') }} SoluxMovil. San Baltazar Temaxcalac.<br>
+            &copy; {{ date('Y') }} BrokersCell. San Baltazar Temaxcalac.<br>
             Si tienes alguna duda, contáctanos al (248) 266-0871.
         </div>
     </div>

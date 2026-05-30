@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield("title") | SoluxMovil Cliente</title>
+    <title>@yield("title") | Brokerscell Cliente</title>
     
     {{-- SCRIPT ANTI-PARPADEO: Aplica el tema guardado antes de que la página se dibuje --}}
     <script>
         (function() {
-            const temaGuardado = localStorage.getItem('solux_theme');
+            const temaGuardado = localStorage.getItem('brokerscell_theme');
             if (temaGuardado === 'dark') {
                 document.documentElement.setAttribute('data-bs-theme', 'dark');
             }
@@ -24,9 +24,22 @@
     
     {{-- Iconos de Bootstrap --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="icon" href="/assets/images/SOLUXMOVIL.png" type="image/png">
+    <link rel="icon" href="/assets/images/brokerscell.jpeg" type="image/jpeg">
     
     <style>
+        /* Paleta de colores personalizada Brokerscell */
+        :root {
+            --brand-purple: #6f42c1;
+            --brand-red: #dc3545;
+            --brand-blue: #0d6efd;
+            --brand-green: #198754;
+        }
+
+        .text-brand-purple { color: var(--brand-purple) !important; }
+        .bg-brand-purple { background-color: var(--brand-purple) !important; }
+        .text-brand-blue { color: var(--brand-blue) !important; }
+        .text-brand-green { color: var(--brand-green) !important; }
+
         /* Ajustes UI para panel de Cliente */
         .client-navbar {
             background-color: #1e293b; /* Azul pizarra oscuro */
@@ -52,7 +65,7 @@
         .sidebar-link.active {
             background-color: #0f172a;
             color: #ffffff;
-            border-left-color: #3b82f6; /* Indicador de página activa */
+            border-left-color: var(--brand-purple); /* Indicador de página activa en Morado */
             font-weight: 600;
         }
 
@@ -137,7 +150,7 @@
                 </button>
 
                 <a class="navbar-brand fw-bold tracking-wide" href="{{route('index')}}">
-                    <i class="bi bi-phone text-primary me-2"></i>SOLUX<span class="text-primary">MOVIL</span>
+                    <i class="bi bi-phone text-brand-purple me-2"></i>Brokers<span class="text-brand-purple">cell</span>
                 </a>
             </div>
 
@@ -165,10 +178,14 @@
                     <li><h6 class="dropdown-header text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px;">Cuenta</h6></li>
                     <li>
                         <a class="dropdown-item py-2 rounded" href="{{route('perfilCliente')}}">
-                            <i class="bi bi-person me-2 text-primary"></i>Mi Perfil
+                            <i class="bi bi-person me-2 text-brand-purple"></i>Mi Perfil
                         </a>
                     </li>
-                
+                    <li>
+                        <a class="dropdown-item py-2 rounded" href="{{ url('/password/reset') }}">
+                            <i class="bi bi-shield-lock me-2 text-success"></i>Cambiar Contraseña
+                        </a>
+                    </li>
 
                     <li><hr class="dropdown-divider my-2"></li>
                     
@@ -210,7 +227,7 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('index') ? 'active' : '' }}" href="{{route('index')}}">
-                                <i class="bi bi-house-door-fill me-3 opacity-75"></i> Inicio
+                                <i class="bi bi-house-door-fill me-3 text-brand-purple"></i> Inicio
                             </a>
                         </li>
 
@@ -218,20 +235,20 @@
 
                         <li class="nav-item">
                             <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('Mis-reparaciones.index') ? 'active' : '' }}" href="/cliente/Mis-reparaciones">
-                                <i class="bi bi-search me-3 opacity-75"></i> Consultar Reparación
+                                <i class="bi bi-search me-3 text-brand-blue"></i> Consultar Reparación
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('chatbot.index') ? 'active' : '' }}" href="/cliente/asistente">
-                                <i class="bi bi-chat-dots-fill me-3 opacity-75"></i> Ayuda y Soporte
+                                <i class="bi bi-chat-dots-fill me-3 text-brand-green"></i> Ayuda y Soporte
                             </a>
                         </li>
                     </ul>
                 </div>
 
                 <div class="offcanvas-footer p-3 border-top text-center" style="border-color: #334155 !important; color: #64748b; font-size: 0.8rem;">
-                    SoluxMovil Cliente v1.0
+                    Brokerscell Cliente v1.0
                 </div>
             </div>
 
@@ -268,7 +285,7 @@
             const nuevoTema = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-bs-theme', nuevoTema);
             switchTema.checked = (nuevoTema === 'dark');
-            localStorage.setItem('solux_theme', nuevoTema);
+            localStorage.setItem('brokerscell_theme', nuevoTema);
             actualizarIcono(nuevoTema);
         });
 

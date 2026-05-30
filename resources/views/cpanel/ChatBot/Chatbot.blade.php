@@ -1,6 +1,6 @@
 @extends('cpanel/plantillaClientes')
 @section('title', 'Soporte')
-@section('title', 'Asistente IA')
+@section('title', 'Asistente Virtual')
 
 @section('content')
 <div class="container-fluid py-4 h-100">
@@ -9,16 +9,16 @@
             
             {{-- ENCABEZADO DEL CHAT --}}
             <div class="card shadow-sm border-0 rounded-top-4 bg-body z-1">
-                <div style="height: 6px; background: linear-gradient(90deg, var(--brand-purple, #0d6efd), var(--brand-blue, #0d6efd));"></div>
+                <div style="height: 6px; background: linear-gradient(90deg, var(--brand-purple, #6f42c1), var(--brand-blue, #0d6efd));"></div>
                 <div class="card-body p-3 px-4 d-flex align-items-center">
                     <div class="position-relative me-3">
                         <div class="bg-brand-purple bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: rgba(111, 66, 193, 0.1);">
-                            <i class="bi bi-robot fs-3" style="color: #0d6efd;"></i>
+                            <i class="bi bi-robot fs-3" style="color: #6f42c1;"></i>
                         </div>
                         <span class="position-absolute bottom-0 start-100 translate-middle p-1 bg-success border border-2 border-body rounded-circle"></span>
                     </div>
                     <div>
-                        <h5 class="fw-bold text-body m-0">Asistente SoluxMovil</h5>
+                        <h5 class="fw-bold text-body m-0">Asistente Brokerscell</h5>
                         <p class="text-secondary small m-0">Respuestas rápidas sobre costos y servicios</p>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                 <div class="d-flex mb-4">
                     <div class="bg-white border shadow-sm rounded-4 rounded-top-0 p-3" style="max-width: 80%;">
                         <p class="m-0 text-body" style="font-size: 0.95rem;">
-                            ¡Hola, {{ auth()->user()->name ?? 'Cliente' }}! 👋 Soy el asistente virtual de SoluxMovil.<br><br>
+                            ¡Hola, {{ auth()->user()->name ?? 'cliente' }}! 👋 Soy el asistente virtual de Brokerscell.<br><br>
                             Para garantizar total transparencia, puedo informarte sobre los costos estimados de nuestras reparaciones más comunes o explicarte en qué consiste cada servicio.<br><br>
                             ¿En qué te puedo ayudar hoy?
                         </p>
@@ -45,8 +45,8 @@
                 <div class="card-body p-3">
                     <form id="chatForm" class="d-flex align-items-center gap-2">
                         @csrf
-                        <input type="text" id="userInput" class="form-control border-secondary-subtle rounded-pill px-4 py-2 bg-body-tertiary focus-ring-blue" placeholder="Escribe tu pregunta aquí (Ej: ¿Cuánto cuesta cambiar pantalla?)..." required autocomplete="off">
-                        <button type="submit" id="sendBtn" class="btn rounded-circle shadow-sm d-flex align-items-center justify-content-center transition-all" style="width: 45px; height: 45px; background-color: #0d6efd; color: white; border: none;">
+                        <input type="text" id="userInput" class="form-control border-secondary-subtle rounded-pill px-4 py-2 bg-body-tertiary focus-ring-purple" placeholder="Escribe tu pregunta aquí (Ej: ¿Cuánto cuesta cambiar pantalla?)..." required autocomplete="off">
+                        <button type="submit" id="sendBtn" class="btn rounded-circle shadow-sm d-flex align-items-center justify-content-center transition-all" style="width: 45px; height: 45px; background-color: #6f42c1; color: white; border: none;">
                             <i class="bi bi-send-fill"></i>
                         </button>
                     </form>
@@ -60,14 +60,14 @@
 <style>
     /* Efecto de foco para el input */
     .focus-ring-purple:focus {
-        border-color: #0d6efd !important;
+        border-color: #6f42c1 !important;
         box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.15) !important;
         background-color: var(--bs-body-bg) !important;
     }
     
     .transition-all:hover {
         transform: scale(1.05);
-        background-color: #0d6efd !important;
+        background-color: #5a32a3 !important;
     }
 
     /* Animación de "Escribiendo" */

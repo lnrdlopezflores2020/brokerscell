@@ -195,20 +195,7 @@
                                 </div>
 
                                 {{-- Footer --}}
-                                <div class="card-footer bg-white border-0 px-4 pb-4 pt-0">
-                                    @if($rep->est_reparacion == 'Terminado' || $rep->est_reparacion == 'Entregado')
-                                        <a href="{{ route('cliente.nota_entrega', $rep->ID_rep) }}"
-                                           class="btn btn-outline-success w-100 fw-bold shadow-sm"
-                                           target="_blank">
-                                            <i class="bi bi-file-earmark-pdf-fill me-2"></i> Nota
-                                        </a>
-                                    @else
-                                        <button class="btn btn-light text-secondary w-100 border" disabled>
-                                            <span class="spinner-grow spinner-grow-sm me-2 text-{{ $color }}" role="status" aria-hidden="true"></span>
-                                            En proceso...
-                                        </button>
-                                    @endif
-                                </div>
+                                
                             </div>
                         </div>
                     @endforeach

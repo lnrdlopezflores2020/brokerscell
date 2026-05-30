@@ -24,7 +24,7 @@
                 </div>
 
                 {{-- NOMBRE --}}
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="input-group has-validation shadow-sm rounded-3 input-group-lg">
                         <span class="input-group-text bg-light border-end-0" style="color: #0d6efd;"><i class="bi bi-person-fill"></i></span>
                         <div class="form-floating flex-grow-1">
@@ -33,7 +33,7 @@
                                    id="nombre"
                                    name="nombre"
                                    value="{{ old('nombre', $fila->nombre ?? '') }}"
-                                   placeholder="Nombre"
+                                   placeholder="Nombre(s)"
                                    required>
                             <label for="nombre">Nombre(s)</label>
                         </div>
@@ -41,8 +41,8 @@
                     </div>
                 </div>
 
-                {{-- APELLIDO --}}
-                <div class="col-md-6">
+                {{-- APELLIDO PATERNO --}}
+                <div class="col-md-4">
                     <div class="input-group has-validation shadow-sm rounded-3 input-group-lg">
                         <span class="input-group-text bg-light border-end-0" style="color: #0d6efd;"><i class="bi bi-person-fill"></i></span>
                         <div class="form-floating flex-grow-1">
@@ -51,11 +51,27 @@
                                    id="apellido"
                                    name="apellido"
                                    value="{{ old('apellido', $fila->apellido ?? '') }}"
-                                   placeholder="Apellido"
+                                   placeholder="Apellido Paterno"
                                    required>
-                            <label for="apellido">Apellido(s)</label>
+                            <label for="apellido">Apellido Paterno</label>
                         </div>
-                        <div class="invalid-feedback">Por favor, ingresa el apellido.</div>
+                        <div class="invalid-feedback">Por favor, ingresa el apellido paterno.</div>
+                    </div>
+                </div>
+
+                {{-- APELLIDO MATERNO (Opcional) --}}
+                <div class="col-md-4">
+                    <div class="input-group shadow-sm rounded-3 input-group-lg">
+                        <span class="input-group-text bg-light border-end-0" style="color: #0d6efd;"><i class="bi bi-person-fill"></i></span>
+                        <div class="form-floating flex-grow-1">
+                            <input type="text"
+                                   class="form-control border-start-0"
+                                   id="amat"
+                                   name="amat"
+                                   value="{{ old('amat', $fila->amat ?? '') }}"
+                                   placeholder="Apellido Materno">
+                            <label for="amat">Apellido Materno (Opcional)</label>
+                        </div>
                     </div>
                 </div>
 

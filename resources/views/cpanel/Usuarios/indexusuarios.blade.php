@@ -124,6 +124,12 @@
                     </table>
                 </div>
             </div>
+
+            {{-- ZONA DE PAGINACIÓN --}}
+            <div class="card-footer bg-white border-top d-flex justify-content-center pt-4 pb-2">
+                {{ $data->links('pagination::bootstrap-5') }}
+            </div>
+
         </div>
     </div>
 
@@ -134,7 +140,6 @@
     </style>
 
     {{-- LIBRERÍA SWEETALERT 2 --}}
-{{-- LIBRERÍA SWEETALERT 2 --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
@@ -154,9 +159,9 @@
                     const term = this.value.toLowerCase().trim();
 
                     rows.forEach(row => {
-                        const folio = row.querySelector('.folio-text').innerText.toLowerCase();
-                        const desc = row.querySelector('.desc-text').innerText.toLowerCase();
-                        const estado = row.querySelector('.estado-text').innerText.toLowerCase();
+                        const folio = row.querySelector('.folio-text')?.innerText.toLowerCase() || '';
+                        const desc = row.querySelector('.desc-text')?.innerText.toLowerCase() || '';
+                        const estado = row.querySelector('.estado-text')?.innerText.toLowerCase() || '';
 
                         // Mostrar si coincide con folio, descripción o estado
                         if(folio.includes(term) || desc.includes(term) || estado.includes(term)) {
@@ -173,17 +178,18 @@
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const form = this.closest('form');
-                    const folio = this.getAttribute('data-folio');
+                    const email = this.getAttribute('data-email');
                     
                     Swal.fire({
                         title: '¿Estás seguro?',
-                        text: `Eliminarás el registro ${folio} del historial. Esta acción es irreversible.`,
+                        text: `Eliminarás al usuario con correo ${email}. Esta acción es irreversible.`,
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#dc3545',
                         cancelButtonColor: '#6c757d',
                         confirmButtonText: '<i class="bi bi-trash3-fill"></i> Sí, eliminar',
-                        cancelButtonText: 'Cancelar'
+                        cancelButtonText: 'Cancelar',
+                        backdrop: `rgba(0,0,0,0.4)`
                     }).then((result) => {
                         if (result.isConfirmed) {
                             form.submit();
@@ -200,7 +206,8 @@
                     text: '{{ session('success') }}',
                     confirmButtonColor: '#0d6efd', // Azul primario
                     timer: 3500,
-                    timerProgressBar: true
+                    timerProgressBar: true,
+                    backdrop: `rgba(0,0,0,0.4)`
                 });
             @endif
 
@@ -210,7 +217,8 @@
                     icon: 'error',
                     title: 'Ha ocurrido un problema',
                     text: '{{ session('error') }}',
-                    confirmButtonColor: '#dc3545' // Rojo peligro
+                    confirmButtonColor: '#dc3545', // Rojo peligro
+                    backdrop: `rgba(0,0,0,0.4)`
                 });
             @endif
         });

@@ -109,22 +109,18 @@
                     </table>
                 </div>
             </div>
+
+            {{-- ZONA DE PAGINACIÓN --}}
+            <div class="card-footer bg-white border-top d-flex justify-content-center pt-4 pb-2">
+                {{ $data->links('pagination::bootstrap-5') }}
+            </div>
         </div>
     </div>
 
-    {{-- ESTILOS DE LA MARCA --}}
     <style>
-        .text-brand-purple { color: #0d6efd !important; }
-        .btn-brand-purple { 
-            background-color: #0d6efd !important; 
-            color: white !important; 
-            border: none;
-            transition: all 0.2s ease;
-        }
-        .btn-brand-purple:hover {
-            background-color: #0d6efd !important;
-            transform: translateY(-1px);
-        }
+        /* Estilos de marca */
+        .text-brand-blue { color: #0d6efd !important; }
+        .hover-info:hover { background-color: #0dcaf0 !important; color: white !important; border-color: #0dcaf0 !important; }
         .hover-primary:hover { background-color: #0d6efd !important; color: white !important; border-color: #0d6efd !important; }
         .hover-danger:hover { background-color: #dc3545 !important; color: white !important; border-color: #dc3545 !important; }
     </style>
@@ -132,69 +128,59 @@
     {{-- LIBRERÍA SWEETALERT 2 --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    {{-- SCRIPTS FUNCIONALES --}}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            // Inicializar tooltips de Bootstrap
+        document.addEventListener('DOMContentLoaded', function () {
+            // Inicializar tooltips
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl)
             });
 
-            // 1. Confirmación de Eliminación (Modal Centrado)
+            // Confirmación de Eliminación (Modal Centrado)
             const deleteButtons = document.querySelectorAll('.btn-delete');
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const form = this.closest('form');
-                    const marca = this.getAttribute('data-marca');
-                    const modelo = this.getAttribute('data-modelo');
+                    const folio = this.getAttribute('data-folio');
                     
                     Swal.fire({
                         title: '¿Estás seguro?',
-                        text: `Eliminarás el equipo ${marca} ${modelo}. Esta acción es irreversible.`,
+                        text: `Eliminarás el registro ${folio} del historial. Esta acción es irreversible.`,
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#dc3545',
                         cancelButtonColor: '#6c757d',
                         confirmButtonText: '<i class="bi bi-trash3-fill"></i> Sí, eliminar',
-                        cancelButtonText: 'Cancelar'
+                        cancelButtonText: 'Cancelar',
+                        backdrop: `rgba(0,0,0,0.4)`
                     }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
+                        if (result.isConfirmed) { form.submit(); }
                     });
                 });
             });
 
-            // Configuración general para Toasts
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'bottom-end',
-                showConfirmButton: false,
-                timer: 3500,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
-
-            // 2. Alerta de Éxito (Toast)
+            // Alertas de Éxito y Error
             @if(session('success'))
-                Toast.fire({
+                Swal.fire({
                     icon: 'success',
-                    title: '{{ session('success') }}'
+                    title: '¡Operación Exitosa!',
+                    text: '{{ session('success') }}',
+                    confirmButtonColor: '#0d6efd',
+                    timer: 3500,
+                    timerProgressBar: true,
+                    backdrop: `rgba(0,0,0,0.4)`
                 });
             @endif
 
-            // 3. Alerta de Error (Toast)
             @if(session('error'))
-                Toast.fire({
+                Swal.fire({
                     icon: 'error',
-                    title: '{{ session('error') }}'
+                    title: 'Ha ocurrido un problema',
+                    text: '{{ session('error') }}',
+                    confirmButtonColor: '#dc3545',
+                    backdrop: `rgba(0,0,0,0.4)`
                 });
             @endif
         });
     </script>
-@endsection
+@endsection 

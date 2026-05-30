@@ -3,15 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SoluxMovil - Taller de Reparación</title>
-
+    <title>Brokerscell - Taller de Reparación</title>
+    <link rel="icon" href="/assets/images/brokerscell.jpeg" type="image/jpeg">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-    <link rel="icon" href="/assets/images/SOLUXMOVIL.png" type="image/png">
-
     <style>
+        /* Paleta de colores personalizada Brokerscell */
+        :root {
+            --brand-purple: #6f42c1;
+            --brand-red: #dc3545;
+            --brand-blue: #0d6efd;
+            --brand-green: #198754;
+        }
+
         /* Smooth scrolling global */
         html {
             scroll-behavior: smooth;
@@ -22,18 +28,26 @@
             overflow-x: hidden;
         }
 
-        /* Navbar con efecto Glassmorphism al hacer scroll */
-        .navbar {
+        /* Clases personalizadas */
+        .text-brand-purple { color: var(--brand-purple) !important; }
+        .bg-brand-purple { background-color: var(--brand-purple) !important; }
+        .btn-brand-purple {
+            background-color: var(--brand-purple);
+            color: white !important;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .btn-brand-purple:hover {
+            background-color: #59339d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(111, 66, 193, 0.4);
+        }
+
+        /* NAVBAR: Estado Inicial (Transparente) */
+        #mainNav {
             transition: all 0.4s ease;
             background-color: transparent !important;
             padding: 20px 0;
-        }
-
-        .navbar.scrolled {
-            background-color: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px);
-            padding: 10px 0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
         }
 
         .navbar-dark-text .nav-link, 
@@ -41,31 +55,44 @@
             color: #ffffff !important;
         }
 
-        .navbar.scrolled .nav-link {
-            color: #333333 !important;
+        /* NAVBAR: Estado con Scroll (Fondo Blanco Translúcido) */
+        #mainNav.scrolled {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            padding: 10px 0 !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+        }
+
+        #mainNav.scrolled .nav-link {
+            color: #495057 !important;
+            font-weight: 600;
         }
         
-        .navbar.scrolled .navbar-brand {
-            color: #0d6efd !important; /* Primary color */
+        #mainNav.scrolled .nav-link:hover {
+            color: var(--brand-purple) !important;
+        }
+        
+        #mainNav.scrolled .navbar-brand {
+            color: var(--brand-purple) !important; /* Brokers en morado */
         }
 
-        .navbar.scrolled .navbar-brand span {
-            color: #212529 !important;
+        #mainNav.scrolled .navbar-brand span {
+            color: #212529 !important; /* cell en oscuro */
         }
 
-        /* Hero Section con animación sutil de fondo */
+        /* Hero Section */
         .hero-section {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(37, 99, 235, 0.7) 100%), url('/assets/images/HOME.png');
+            background: linear-gradient(135deg, rgba(111, 66, 193, 0.85) 0%, rgba(13, 110, 253, 0.7) 100%), url('/assets/images/fondo.png');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Efecto Parallax */
+            background-attachment: fixed;
             height: 100vh;
             display: flex;
             align-items: center;
             position: relative;
         }
 
-        /* Tarjetas de Servicio con alto contraste y fluidez */
+        /* Tarjetas de Servicio */
         .service-card {
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border-radius: 16px;
@@ -76,7 +103,7 @@
         .service-card:hover {
             transform: translateY(-15px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.12) !important;
-            border-color: rgba(13, 110, 253, 0.3) !important;
+            border-color: rgba(111, 66, 193, 0.3) !important;
         }
 
         .icon-box {
@@ -101,12 +128,12 @@
             height: 60px;
             bottom: 40px;
             right: 40px;
-            background-color: #25d366;
+            background-color: var(--brand-green);
             color: #FFF;
             border-radius: 50px;
             text-align: center;
             font-size: 30px;
-            box-shadow: 0 4px 10px rgba(37, 211, 102, 0.4);
+            box-shadow: 0 4px 10px rgba(25, 135, 84, 0.4);
             z-index: 100;
             display: flex;
             align-items: center;
@@ -118,7 +145,7 @@
         .whatsapp-float:hover {
             transform: scale(1.1);
             color: white;
-            box-shadow: 0 6px 15px rgba(37, 211, 102, 0.6);
+            box-shadow: 0 6px 15px rgba(25, 135, 84, 0.6);
         }
     </style>
 </head>
@@ -126,27 +153,51 @@
 
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark-text" id="mainNav">
     <div class="container">
-        <a class="navbar-brand fw-bold fs-4 text-white" href="#">
-            Solux<span class="text-light">Movil</span>
+        
+        {{-- LOGO BRANDING BROKERSCELL --}}
+        <a class="navbar-brand fw-bold fs-3 d-flex align-items-center" href="#">
+            <i class="bi bi-phone-vibrate me-2"></i> Brokers<span class="text-info">cell</span>
         </a>
-        <button class="navbar-toggler bg-primary border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-list fs-1 text-brand-purple"></i>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-center fw-medium">
+            <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+                    <a class="nav-link active px-lg-3" href="#">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#servicios">Servicios</a>
+                    <a class="nav-link px-lg-3" href="#servicios">Servicios</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#contacto">Contacto</a>
+                    <a class="nav-link px-lg-3" href="#contacto">Contacto</a>
                 </li>
+
+                {{-- LÓGICA DE AUTENTICACIÓN --}}
                 <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
-                    <a href="/login" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm fw-bold">
-                        <i class="bi bi-person-circle me-2"></i>Iniciar Sesión
-                    </a>
+                    @auth
+                        @php
+                            $dashboardUrl = '/dashboard';
+                            $rol = strtolower(auth()->user()->rol_usuario);
+                            
+                            if ($rol === 'administrador') {
+                                $dashboardUrl = '/admon/';
+                            } elseif ($rol === 'tecnico') {
+                                $dashboardUrl = '/tecnico/';
+                            } elseif ($rol === 'cliente') {
+                                $dashboardUrl = '/cliente/';
+                            }
+                        @endphp
+                        <a href="{{ url($dashboardUrl) }}" class="btn btn-brand-purple px-4 py-2 rounded-pill fw-bold">
+                            <i class="bi bi-speedometer2 me-2"></i>Mi Panel
+                        </a>
+                    @else
+                        <a href="/login" class="btn btn-brand-purple px-4 py-2 rounded-pill fw-bold">
+                            <i class="bi bi-person-circle me-2"></i>Iniciar Sesión
+                        </a>
+                    @endauth
                 </li>
             </ul>
         </div>
@@ -162,7 +213,7 @@
                     Especialistas en hardware, software y recuperación de datos. Devolvemos la vida a tus dispositivos con un servicio rápido, garantizado y profesional.
                 </p>
                 <div data-aos="zoom-in" data-aos-delay="300">
-                    <a href="#servicios" class="btn btn-light btn-lg px-5 py-3 rounded-pill text-primary fw-bold shadow-lg me-3 mb-3 mb-md-0">
+                    <a href="#servicios" class="btn btn-light btn-lg px-5 py-3 rounded-pill text-brand-purple fw-bold shadow-lg me-3 mb-3 mb-md-0">
                         Nuestros Servicios
                     </a>
                     <a href="#contacto" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-bold mb-3 mb-md-0">
@@ -178,15 +229,16 @@
     <div class="container py-5">
         <div class="text-center mb-5" data-aos="fade-down">
             <h2 class="fw-bold display-5 text-dark mb-3">Nuestros Servicios</h2>
-            <div class="bg-primary mx-auto rounded" style="width: 60px; height: 4px;"></div>
+            <div class="bg-brand-purple mx-auto rounded" style="width: 60px; height: 4px;"></div>
             <p class="text-muted mt-4 fs-5">Soluciones integrales de alta tecnología para todos tus equipos.</p>
         </div>
 
         <div class="row g-4">
+            {{-- TARJETA 1 --}}
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                 <div class="card h-100 border-0 shadow-sm service-card bg-white">
                     <div class="card-body p-5 text-center">
-                        <div class="icon-box bg-primary bg-opacity-10 text-primary mx-auto mb-4">
+                        <div class="icon-box bg-danger bg-opacity-10 text-danger mx-auto mb-4">
                             <i class="bi bi-motherboard"></i>
                         </div>
                         <h3 class="h4 fw-bold mb-3 text-dark">Reparación de Hardware</h3>
@@ -195,6 +247,7 @@
                 </div>
             </div>
 
+            {{-- TARJETA 2 --}}
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
                 <div class="card h-100 border-0 shadow-sm service-card bg-white">
                     <div class="card-body p-5 text-center">
@@ -207,10 +260,11 @@
                 </div>
             </div>
 
+            {{-- TARJETA 3 --}}
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="500">
                 <div class="card h-100 border-0 shadow-sm service-card bg-white">
                     <div class="card-body p-5 text-center">
-                        <div class="icon-box bg-info bg-opacity-10 text-info mx-auto mb-4">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary mx-auto mb-4">
                             <i class="bi bi-tools"></i>
                         </div>
                         <h3 class="h4 fw-bold mb-3 text-dark">Mantenimiento Preventivo</h3>
@@ -222,7 +276,7 @@
     </div>
 </section>
 
-<a href="https://wa.me/5212482660871" class="whatsapp-float" target="_blank" title="Contáctanos por WhatsApp" data-aos="zoom-in" data-aos-offset="0">
+<a href="https://wa.me/525610239500" class="whatsapp-float" target="_blank" title="Contáctanos por WhatsApp" data-aos="zoom-in" data-aos-offset="0">
     <i class="bi bi-whatsapp"></i>
 </a>
 
@@ -230,7 +284,7 @@
     <div class="container pt-4">
         <div class="row gy-4 mb-5">
             <div class="col-lg-4 col-md-6" data-aos="fade-right">
-                <h4 class="fw-bold text-primary mb-4">Solux<span class="text-white">Movil</span></h4>
+                <h4 class="fw-bold text-brand-purple mb-4">Brokers<span class="text-white">cell</span></h4>
                 <p class="text-white-50 pe-md-4">
                     Tu centro de soluciones tecnológicas. Nos dedicamos a devolverle la vida a tus equipos con honestidad, rapidez y máxima calidad.
                 </p>
@@ -245,16 +299,16 @@
                 <h5 class="fw-bold mb-4 text-uppercase tracking-wider fs-6 text-white-50">Contacto Directo</h5>
                 <ul class="list-unstyled text-white">
                     <li class="mb-3 d-flex align-items-center">
-                        <i class="bi bi-geo-alt-fill fs-5 text-primary me-3"></i> 
+                        <i class="bi bi-geo-alt-fill fs-5 text-danger me-3"></i>
                         <span>Av. Benito Juárez #11, <br> San Baltazar Temaxcalac</span>
                     </li>
                     <li class="mb-3 d-flex align-items-center">
-                        <i class="bi bi-telephone-fill fs-5 text-primary me-3"></i> 
-                        <span>(248) 266-0871</span>
+                        <i class="bi bi-telephone-fill fs-5 text-success me-3"></i>
+                        <span>(56) 1023-9500</span>
                     </li>
                     <li class="mb-3 d-flex align-items-center">
-                        <i class="bi bi-envelope-fill fs-5 text-primary me-3"></i> 
-                        <span>soluxmovil@gmail.com</span>
+                        <i class="bi bi-envelope-fill fs-5 text-primary me-3"></i>
+                        <span>contacto@brokerscell.com</span>
                     </li>
                 </ul>
             </div>
@@ -265,11 +319,11 @@
                     <ul class="list-unstyled mb-0">
                         <li class="d-flex justify-content-between mb-3 border-bottom border-secondary pb-2">
                             <span class="fw-medium">Lunes - Viernes:</span>
-                            <span class="text-info fw-bold">9:00 AM - 8:00 PM</span>
+                            <span class="text-brand-purple fw-bold">9:00 AM - 8:00 PM</span>
                         </li>
                         <li class="d-flex justify-content-between">
                             <span class="fw-medium">Sábados - Domingos:</span>
-                            <span class="text-info fw-bold">11:00 AM - 8:00 PM</span>
+                            <span class="text-brand-purple fw-bold">11:00 AM - 8:00 PM</span>
                         </li>
                     </ul>
                 </div>
@@ -277,8 +331,7 @@
         </div>
 
         <div class="border-top border-secondary pt-4 d-flex flex-column flex-md-row justify-content-between align-items-center text-white-50 small">
-            <p class="mb-2 mb-md-0">&copy; {{ date('Y') }} SoluxMovil. Todos los derechos reservados.</p>
-            
+            <p class="mb-2 mb-md-0">&copy; {{ date('Y') }} Brokerscell. Todos los derechos reservados.</p>
             <button type="button" class="btn btn-link text-white-50 text-decoration-none small p-0" data-bs-toggle="modal" data-bs-target="#privacidadModal">
                 Aviso de Privacidad
             </button>
@@ -291,37 +344,25 @@
         <div class="modal-content border-0 shadow-lg rounded-4">
             <div class="modal-header bg-light border-bottom-0 pb-0 pt-4 px-4">
                 <h5 class="modal-title fw-bold text-dark fs-4" id="privacidadModalLabel">
-                    <i class="bi bi-shield-lock text-primary me-2"></i>Aviso de Privacidad
+                    <i class="bi bi-shield-lock text-brand-purple me-2"></i>Aviso de Privacidad
                 </h5>
                 <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-4 py-4 text-secondary">
-                <p>En <strong>SoluxMovil</strong>, valoramos su privacidad y nos comprometemos a proteger sus datos personales en estricto apego a la legislación vigente.</p>
-                
+                <p>En <strong>Brokerscell</strong>, valoramos su privacidad y nos comprometemos a proteger sus datos personales en estricto apego a la legislación vigente.</p>
                 <h6 class="fw-bold text-dark mt-4">1. Recopilación de Datos</h6>
-                <p>Los datos solicitados (nombre, teléfono, correo y detalles del equipo) son recabados única y exclusivamente con la finalidad de gestionar la reparación, mantenimiento o servicio técnico de su dispositivo.</p>
-
-                <h6 class="fw-bold text-dark mt-4">2. Privacidad de la Información del Dispositivo</h6>
-                <p>Nuestros técnicos tienen estrictamente prohibido acceder a galerías de fotos, redes sociales, mensajes, correos electrónicos o cualquier información personal almacenada en el dispositivo del cliente, a menos que el servicio solicitado requiera recuperación de datos y el cliente brinde su consentimiento explícito.</p>
-
-                <h6 class="fw-bold text-dark mt-4">3. Uso de la Información</h6>
-                <p>La información de contacto se utilizará para:</p>
-                <ul>
-                    <li>Notificar cambios en el estado de la reparación.</li>
-                    <li>Enviar notas de remisión o entrega.</li>
-                    <li>Contactar en caso de requerir autorización para refacciones adicionales.</li>
-                </ul>
-
-                <h6 class="fw-bold text-dark mt-4">4. Protección y Resguardo</h6>
-                <p>Implementamos medidas de seguridad físicas y digitales en nuestros sistemas administrativos para prevenir el acceso no autorizado, alteración o destrucción de su información.</p>
-
+                <p>Los datos solicitados son recabados única y exclusivamente con la finalidad de gestionar la reparación, mantenimiento o servicio técnico de su dispositivo.</p>
+                <h6 class="fw-bold text-dark mt-4">2. Privacidad de la Información</h6>
+                <p>Nuestros técnicos tienen estrictamente prohibido acceder a galerías de fotos, redes sociales, mensajes, correos electrónicos o cualquier información personal, a menos que el servicio requiera recuperación de datos con su consentimiento explícito.</p>
+                <h6 class="fw-bold text-dark mt-4">3. Protección y Resguardo</h6>
+                <p>Implementamos medidas de seguridad para prevenir el acceso no autorizado a su información.</p>
                 <p class="mt-4 mb-0 fst-italic small text-muted text-center">
-                    Última actualización: Abril 2026. <br>
-                    Para cualquier duda respecto a este aviso, contáctenos en soluxmovil@gmail.com
+                    Última actualización: {{ date('F Y') }}. <br>
+                    Dudas: contacto@brokerscell.com
                 </p>
             </div>
             <div class="modal-footer bg-light border-top-0 pt-0 pb-4 px-4">
-                <button type="button" class="btn btn-primary rounded-pill px-4 fw-bold w-100" data-bs-dismiss="modal">Comprendido y Aceptado</button>
+                <button type="button" class="btn btn-brand-purple rounded-pill px-4 fw-bold w-100" data-bs-dismiss="modal">Comprendido y Aceptado</button>
             </div>
         </div>
     </div>
@@ -331,13 +372,12 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 <script>
-    // Inicializar Animaciones AOS
     AOS.init({
-        once: true, // La animación solo ocurre una vez al hacer scroll
-        offset: 50,  // Offset (en px) desde el elemento original para disparar la animación
+        once: true,
+        offset: 50,
     });
 
-    // Script para el efecto de la Navbar al hacer scroll
+    // Toggle de la clase de la navbar
     window.addEventListener('scroll', function() {
         const navbar = document.getElementById('mainNav');
         if (window.scrollY > 50) {

@@ -44,7 +44,7 @@
                                     @foreach($clientes as $cliente)
                                         <option value="{{ $cliente->ID_client }}"
                                             {{ ($dispositivo->id_client_fk ?? '') == $cliente->ID_client ? 'selected' : '' }}>
-                                            {{ $cliente->nombre }} {{ $cliente->apellido }}
+                                            {{ $cliente->nombre }} {{ $cliente->apellido }} (ID: #{{ str_pad($cliente->ID_client, 5, '0', STR_PAD_LEFT) }})
                                         </option>
                                     @endforeach
                                 </select>
@@ -111,7 +111,7 @@
                         <a href="{{ url('tecnico/dispositivos') }}" class="btn btn-light border fw-medium px-4 py-2 rounded-pill shadow-sm hover-dark transition-all d-flex align-items-center">
                             Cancelar
                         </a>
-                        <button type="submit" class="btn text-white px-5 py-2 fw-bold rounded-pill shadow-sm transition-all d-flex align-items-center" style="background-color: #0d6efd;">
+                        <button type="submit" class="btn text-white px-5 py-2 fw-bold rounded-pill shadow-sm transition-all d-flex align-items-center" id="btnGuardar" style="background-color: #0d6efd;">
                             <i class="bi {{ $esEdicion ? 'bi-check-circle-fill' : 'bi-save-fill' }} me-2 fs-5"></i>
                             {{ $esEdicion ? 'Actualizar Dispositivo' : 'Guardar Dispositivo' }}
                         </button>
@@ -151,8 +151,14 @@
         
         // INTERCEPTAR ENVÍO DEL FORMULARIO
         const formDispositivo = document.getElementById('formDispositivo');
+        
         if(formDispositivo) {
             formDispositivo.addEventListener('submit', function(e) {
+                // 1. Validamos nativamente (campos vacíos, etc)
+                if (!formDispositivo.checkValidity()) {
+                    return; 
+                }
+
                 e.preventDefault(); 
                 
                 const isEdit = {{ $esEdicion ? 'true' : 'false' }};
@@ -163,7 +169,7 @@
                     text: "Verifica que la marca y modelo sean correctos antes de continuar.",
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonColor: '#6f42c1',
+                    confirmButtonColor: '#0d6efd',
                     cancelButtonColor: '#6c757d',
                     confirmButtonText: '<i class="bi bi-save"></i> Sí, proceder',
                     cancelButtonText: 'Revisar datos'
@@ -172,15 +178,38 @@
                         Swal.fire({
                             title: 'Procesando...',
                             allowOutsideClick: false,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            }
+                            didOpen: () => { Swal.showLoading(); }
                         });
                         formDispositivo.submit(); 
                     }
                 });
             });
         }
+
+        // 2. ALERTA DE ERROR (Captura la excepción del controlador de dispositivos duplicados)
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de Registro',
+                text: "{{ session('error') }}",
+                confirmButtonColor: '#dc3545',
+                confirmButtonText: 'Entendido',
+                backdrop: `rgba(0,0,0,0.4)`
+            });
+        @endif
+
+        // 3. ALERTA DE ÉXITO (Opcional, por si regresas con mensaje de éxito)
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: '¡Operación Exitosa!',
+                text: "{{ session('success') }}",
+                confirmButtonColor: '#198754',
+                timer: 3000,
+                timerProgressBar: true,
+                backdrop: `rgba(0,0,0,0.4)`
+            });
+        @endif
     });
 </script>
 @endsection

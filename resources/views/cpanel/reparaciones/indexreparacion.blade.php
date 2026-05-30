@@ -29,8 +29,20 @@
                     {{-- Botones de Admin: Enfocados en reportes globales del historial --}}
                     @if(auth()->user()->rol_usuario === 'administrador')
                         <a class="btn btn-outline-danger fw-medium d-flex align-items-center shadow-sm" href="{{url('admon/reportes/reparaciones')}}" target="_blank" data-bs-toggle="tooltip" title="Generar PDF de todas las reparaciones">
-                            <i class="bi bi-file-earmark-pdf-fill me-2"></i> Reporte PDF
+                            <i class="bi bi-file-earmark-pdf-fill me-2"></i> Reporte General PDF
                         </a>
+                    @endif
+
+                    {{-- Botones de Admin: Reportes filtrados por mes --}}
+                    @if(auth()->user()->rol_usuario === 'administrador')
+                        <div class="d-flex align-items-center gap-2">
+                            <form action="{{ route('admon.reportes.mensual') }}" method="GET" class="d-flex gap-2">
+                                <input type="month" name="mes" class="form-control form-control-sm" required value="{{ date('Y-m') }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm">
+                                    <i class="bi bi-file-earmark-pdf-fill"></i> Reporte Mensual
+                                </button>
+                            </form>
+                        </div>
                     @endif
 
                     {{-- Botones de Técnico (Intactos) --}}
@@ -174,6 +186,15 @@
                                                 <a class="btn btn-sm btn-light border text-danger hover-danger" href="{{route('reportes.nota', $fila->ID_rep)}}" target="_blank" data-bs-toggle="tooltip" title="Generar Nota PDF">
                                                     <i class="bi bi-file-pdf-fill"></i>
                                                 </a>
+
+                                                <a class="btn btn-sm btn-light border text-danger hover-danger" 
+                                                    href="{{route('cliente.nota_entrega_tec', $fila->ID_rep)}}" 
+                                                    target="_blank" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="Descargar Nota de Entrega">
+                                                    <i class="bi bi-file-pdf-fill"></i>
+                                                </a>
+
                                                 <a class="btn btn-sm btn-light border text-primary hover-primary" href="/tecnico/Actualizar/{{$fila->ID_rep}}/edit" data-bs-toggle="tooltip" title="Actualizar Estado">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a>
@@ -198,15 +219,16 @@
                         </tbody>
                     </table>
                 </div>
+            {{-- ZONA DE PAGINACIÓN --}}
+            <div class="card-footer bg-white border-top d-flex justify-content-center pt-4 pb-2">
+                {{ $data->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>
 
     <style>
-        /* Colores marca */
+        /* Estilos de marca */
         .text-brand-purple { color: #6f42c1 !important; }
-        
-        /* Efectos hover sutiles para los botones de acción en la tabla */
         .hover-info:hover { background-color: #0dcaf0 !important; color: white !important; border-color: #0dcaf0 !important; }
         .hover-primary:hover { background-color: #0d6efd !important; color: white !important; border-color: #0d6efd !important; }
         .hover-danger:hover { background-color: #dc3545 !important; color: white !important; border-color: #dc3545 !important; }
@@ -215,36 +237,26 @@
     {{-- LIBRERÍA SWEETALERT 2 --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-   {{-- LIBRERÍA SWEETALERT 2 --}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            
             // 1. Inicializar tooltips
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl)
             });
 
-            // 2. Buscador en tiempo real para optimizar gestión
+            // 2. Buscador en tiempo real
             const searchInput = document.getElementById('searchHistorial');
-            const rows = document.querySelectorAll('.reparacion-row');
-
+            // Nota: Si usas paginación, el buscador por JS solo buscará en la página actual.
+            // Para búsqueda total, deberías usar un formulario GET que recargue la página.
             if(searchInput) {
                 searchInput.addEventListener('keyup', function() {
                     const term = this.value.toLowerCase().trim();
-
+                    const rows = document.querySelectorAll('.reparacion-row');
                     rows.forEach(row => {
-                        const folio = row.querySelector('.folio-text').innerText.toLowerCase();
-                        const desc = row.querySelector('.desc-text').innerText.toLowerCase();
-                        const estado = row.querySelector('.estado-text').innerText.toLowerCase();
-
-                        // Mostrar si coincide con folio, descripción o estado
-                        if(folio.includes(term) || desc.includes(term) || estado.includes(term)) {
-                            row.style.display = '';
-                        } else {
-                            row.style.display = 'none';
-                        }
+                        const text = row.innerText.toLowerCase();
+                        row.style.display = text.includes(term) ? '' : 'none';
                     });
                 });
             }
@@ -264,34 +276,34 @@
                         confirmButtonColor: '#dc3545',
                         cancelButtonColor: '#6c757d',
                         confirmButtonText: '<i class="bi bi-trash3-fill"></i> Sí, eliminar',
-                        cancelButtonText: 'Cancelar'
+                        cancelButtonText: 'Cancelar',
+                        backdrop: `rgba(0,0,0,0.4)`
                     }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
+                        if (result.isConfirmed) { form.submit(); }
                     });
                 });
             });
 
-            // 4. Alerta Modal Centrada de Éxito
+            // 4. Alertas de Éxito y Error
             @if(session('success'))
                 Swal.fire({
                     icon: 'success',
                     title: '¡Operación Exitosa!',
                     text: '{{ session('success') }}',
-                    confirmButtonColor: '#0d6efd', // Azul primario
+                    confirmButtonColor: '#0d6efd',
                     timer: 3500,
-                    timerProgressBar: true
+                    timerProgressBar: true,
+                    backdrop: `rgba(0,0,0,0.4)`
                 });
             @endif
 
-            // 5. Alerta Modal Centrada de Error
             @if(session('error'))
                 Swal.fire({
                     icon: 'error',
                     title: 'Ha ocurrido un problema',
                     text: '{{ session('error') }}',
-                    confirmButtonColor: '#dc3545' // Rojo peligro
+                    confirmButtonColor: '#dc3545',
+                    backdrop: `rgba(0,0,0,0.4)`
                 });
             @endif
         });

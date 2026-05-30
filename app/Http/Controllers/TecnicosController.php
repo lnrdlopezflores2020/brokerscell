@@ -12,7 +12,7 @@ class TecnicosController extends Controller
 {
     public function index(){
         $tecnicos = DB::table('tecnico');
-        $fila = $tecnicos->get();
+        $fila = $tecnicos->paginate(10);
         return view('cpanel/tecnicos/indextecnicos', ['data' => $fila]);
     }
 
@@ -31,16 +31,18 @@ class TecnicosController extends Controller
         // 1. Recibimos los datos
         $nombre = $request->input('nombre');
         $apellido = $request->input('apellido');
+        $amat = $request->input('amat'); // NUEVO CAMPO: Apellido Materno
         $telefono = $request->input('telefono');
         $Usuario = $request->input('usuario_fk');
 
         try {
             // 2. Intentamos insertar en la Base de Datos
             DB::table('tecnico')->insert([
-                'nombre'     => $nombre,
-                'apellido'   => $apellido,
-                'tel_tecnico'=> $telefono,
-                'usuario_fk' => $Usuario
+                'nombre'      => $nombre,
+                'apellido'    => $apellido,
+                'amat'        => $amat,      // NUEVO CAMPO
+                'tel_tecnico' => $telefono,
+                'usuario_fk'  => $Usuario
             ]);
 
             return redirect()->route('tecnicos.index')
@@ -86,10 +88,11 @@ class TecnicosController extends Controller
         try {
             // Actualizamos en BD
             DB::table('tecnico')->where('ID_tec', $id)->update([
-                'nombre'     => $datosUsuario['nombre'],
-                'apellido'   => $datosUsuario['apellido'],
-                'tel_tecnico'=> $datosUsuario['telefono'],
-                'usuario_fk' => $datosUsuario['usuario_fk']  
+                'nombre'      => $datosUsuario['nombre'],
+                'apellido'    => $datosUsuario['apellido'],
+                'amat'        => $datosUsuario['amat'] ?? null, // NUEVO CAMPO
+                'tel_tecnico' => $datosUsuario['telefono'],
+                'usuario_fk'  => $datosUsuario['usuario_fk']  
             ]);
 
             return redirect()->route('tecnicos.index')->with('success', 'Datos del técnico actualizados correctamente.');

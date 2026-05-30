@@ -45,7 +45,7 @@
                             <tr>
                                 <td style="color: #555555; font-size: 15px; line-height: 24px; text-align: center; padding-bottom: 30px;">
                                     Hola,<br>
-                                    Para proteger tu cuenta en <strong>SoluxMovil</strong>, necesitamos confirmar tu identidad. Ingresa el siguiente código de 6 dígitos en el sistema:
+                                    Para proteger tu cuenta en <strong>BrokersCell</strong>, necesitamos confirmar tu identidad. Ingresa el siguiente código de 6 dígitos en el sistema:
                                 </td>
                             </tr>
 

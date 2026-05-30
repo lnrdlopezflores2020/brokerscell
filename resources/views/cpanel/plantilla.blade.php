@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield("title") | SoluxMovil Admin</title>
+    <title>@yield("title") | Brokerscell Admin</title>
     
     {{-- SCRIPT ANTI-PARPADEO: Aplica el tema guardado antes de que la página se dibuje --}}
     <script>
         (function() {
-            const temaGuardado = localStorage.getItem('solux_theme');
+            const temaGuardado = localStorage.getItem('brokerscell_theme');
             if (temaGuardado === 'dark') {
                 document.documentElement.setAttribute('data-bs-theme', 'dark');
             }
@@ -17,16 +17,27 @@
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     
-    {{-- Tus hojas de estilo personalizadas (Intactas) --}}
+    {{-- Tus hojas de estilo personalizadas --}}
     <link rel="stylesheet" href="/assets/css/style_form.css" type="text/css">
     <link rel="stylesheet" href="/assets/css/style_consulta.css" type="text/css">
     <link rel="stylesheet" href="/assets/css/style.css">
     
     {{-- Iconos de Bootstrap --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="icon" href="/assets/images/SOLUXMOVIL.png" type="image/png">
+    <link rel="icon" href="/assets/images/brokerscell.jpeg" type="image/jpeg">
     
     <style>
+        /* Paleta de colores personalizada Brokerscell */
+        :root {
+            --brand-purple: #6f42c1;
+            --brand-red: #dc3545;
+            --brand-blue: #0d6efd;
+            --brand-green: #198754;
+        }
+
+        .text-brand-purple { color: var(--brand-purple) !important; }
+        .bg-brand-purple { background-color: var(--brand-purple) !important; }
+
         /* Ajustes UI para panel de Administración */
         .admin-navbar {
             background-color: #1e293b; /* Azul pizarra oscuro, muy profesional */
@@ -52,7 +63,7 @@
         .sidebar-link.active {
             background-color: #0f172a;
             color: #ffffff;
-            border-left-color: #3b82f6; /* Indicador de página activa */
+            border-left-color: var(--brand-purple); /* Indicador de página activa en Morado */
             font-weight: 600;
         }
 
@@ -137,7 +148,7 @@
                 </button>
 
                 <a class="navbar-brand fw-bold tracking-wide" href="{{route('inicio.index')}}">
-                    <i class="bi bi-cpu text-primary me-2"></i>SOLUX<span class="text-primary">MOVIL</span>
+                    <i class="bi bi-cpu text-brand-purple me-2"></i>Brokers<span class="text-brand-purple">cell</span>
                 </a>
             </div>
 
@@ -167,7 +178,7 @@
                     <li><h6 class="dropdown-header text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px;">Cuenta</h6></li>
                     <li>
                         <a class="dropdown-item py-2 rounded" href="{{route('perfilUsuario')}}">
-                            <i class="bi bi-person me-2 text-primary"></i>Mi Perfil
+                            <i class="bi bi-person me-2 text-brand-purple"></i>Mi Perfil
                         </a>
                     </li>
                     <li>
@@ -203,7 +214,7 @@
                 </ul>
             </div>
 
-            {{-- Menú Lateral (Offcanvas) - INTACTO DE ADMIN --}}
+            {{-- Menú Lateral (Offcanvas) --}}
             <div class="offcanvas offcanvas-start admin-sidebar text-white" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" style="width: 280px;">
                 <div class="offcanvas-header border-bottom" style="border-color: #334155 !important;">
                     <h6 class="offcanvas-title fw-bold text-uppercase" id="offcanvasNavbarLabel" style="letter-spacing: 1px; color: #94a3b8;">
@@ -216,38 +227,38 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('inicio.index') ? 'active' : '' }}" href="{{route('inicio.index')}}">
-                                <i class="bi bi-grid-1x2-fill me-3 opacity-75"></i> Dashboard
+                                <i class="bi bi-grid-1x2-fill me-3 text-brand-purple"></i> Dashboard
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('reparaciones.*') ? 'active' : '' }}" href="/admon/reparaciones/">
-                                <i class="bi bi-tools me-3 opacity-75"></i> Reparaciones
+                                <i class="bi bi-tools me-3 text-danger"></i> Reparaciones
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('clientes.*') ? 'active' : '' }}" href="/admon/clientes/">
-                                <i class="bi bi-person-vcard-fill me-3 opacity-75"></i> Clientes
+                                <i class="bi bi-person-vcard-fill me-3 text-primary"></i> Clientes
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('tecnicos.*') ? 'active' : '' }}" href="/admon/tecnicos/">
-                                <i class="bi bi-wrench-adjustable me-3 opacity-75"></i> Técnicos
+                                <i class="bi bi-wrench-adjustable me-3 text-success"></i> Técnicos
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('usuarios.*') ? 'active' : '' }}" href="/admon/usuarios/">
-                                <i class="bi bi-shield-lock-fill me-3 opacity-75"></i> Accesos / Usuarios
+                                <i class="bi bi-shield-lock-fill me-3 text-brand-purple"></i> Accesos / Usuarios
                             </a>
                         </li>
                     </ul>
                 </div>
 
                 <div class="offcanvas-footer p-3 border-top text-center" style="border-color: #334155 !important; color: #64748b; font-size: 0.8rem;">
-                    SoluxMovil Admin v1.0
+                    Brokerscell Admin v1.0
                 </div>
             </div>
 
@@ -284,7 +295,7 @@
             const nuevoTema = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-bs-theme', nuevoTema);
             switchTema.checked = (nuevoTema === 'dark');
-            localStorage.setItem('solux_theme', nuevoTema);
+            localStorage.setItem('brokerscell_theme', nuevoTema);
             actualizarIcono(nuevoTema);
         });
 

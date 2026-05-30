@@ -1,4 +1,4 @@
-    {{-- Contenedor principal que ocupa toda la altura disponible --}}
+{{-- Contenedor principal que ocupa toda la altura disponible --}}
 <div class="container-fluid d-flex flex-column" style="min-height: calc(100vh - 120px);">
     
     <div class="card shadow-sm border-0 rounded-4 bg-body flex-grow-1 d-flex flex-column">
@@ -11,11 +11,9 @@
             <p class="text-secondary small mb-0 mt-1">Completa la información personal y de ubicación del cliente.</p>
         </div>
 
-        {{-- CUERPO DE LA TARJETA (Flex para estirar el contenido) --}}
+        {{-- CUERPO DE LA TARJETA --}}
         <div class="card-body p-4 p-md-5 d-flex flex-column flex-grow-1">
 
-            {{-- Asegúrate de que tu etiqueta <form> envuelva esto y tenga clases flex --}}
-            {{-- <form action="..." method="POST" class="d-flex flex-column flex-grow-1"> --}}
             <div class="d-flex flex-column flex-grow-1">
                 
                 <div class="row g-4">
@@ -25,7 +23,8 @@
                         <hr class="mt-2 mb-0 border-secondary opacity-10">
                     </div>
 
-                    <div class="col-md-6">
+                    {{-- Nombre --}}
+                    <div class="col-md-4">
                         <div class="input-group input-group-lg has-validation shadow-sm">
                             <span class="input-group-text bg-body-tertiary border-subtle text-primary"><i class="bi bi-person-fill"></i></span>
                             <div class="form-floating flex-grow-1">
@@ -34,15 +33,16 @@
                                        id="nombre"
                                        name="nombre"
                                        value="{{ old('nombre', $fila->nombre ?? '') }}"
-                                       placeholder="Nombre"
+                                       placeholder="Nombre(s)"
                                        required>
-                                <label for="nombre" class="text-secondary">Nombre</label>
+                                <label for="nombre" class="text-secondary">Nombre(s)</label>
                             </div>
                             <div class="invalid-feedback">Por favor, ingresa el nombre.</div>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    {{-- Apellido Paterno --}}
+                    <div class="col-md-4">
                         <div class="input-group input-group-lg has-validation shadow-sm">
                             <span class="input-group-text bg-body-tertiary border-subtle text-primary"><i class="bi bi-person-fill"></i></span>
                             <div class="form-floating flex-grow-1">
@@ -51,14 +51,31 @@
                                        id="apellido"
                                        name="apellido"
                                        value="{{ old('apellido', $fila->apellido ?? '') }}"
-                                       placeholder="Apellido"
+                                       placeholder="Apellido Paterno"
                                        required>
-                                <label for="apellido" class="text-secondary">Apellido</label>
+                                <label for="apellido" class="text-secondary">Apellido Paterno</label>
                             </div>
-                            <div class="invalid-feedback">Por favor, ingresa el apellido.</div>
+                            <div class="invalid-feedback">Por favor, ingresa el apellido paterno.</div>
                         </div>
                     </div>
 
+                    {{-- Apellido Materno (NUEVO CAMPO - Opcional) --}}
+                    <div class="col-md-4">
+                        <div class="input-group input-group-lg shadow-sm">
+                            <span class="input-group-text bg-body-tertiary border-subtle text-primary"><i class="bi bi-person-fill"></i></span>
+                            <div class="form-floating flex-grow-1">
+                                <input type="text"
+                                       class="form-control border-subtle bg-body"
+                                       id="amat"
+                                       name="amat"
+                                       value="{{ old('amat', $fila->amat ?? '') }}"
+                                       placeholder="Apellido Materno">
+                                <label for="amat" class="text-secondary">Apellido Materno</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Teléfono --}}
                     <div class="col-md-6">
                         <div class="input-group input-group-lg has-validation shadow-sm">
                             <span class="input-group-text bg-body-tertiary border-subtle text-primary"><i class="bi bi-telephone-fill"></i></span>
@@ -78,11 +95,12 @@
                         </div>
                     </div>
 
+                    {{-- Usuario --}}
                     <div class="col-md-6">
                         <div class="input-group input-group-lg has-validation shadow-sm">
                             <span class="input-group-text bg-body-tertiary border-subtle text-primary"><i class="bi bi-envelope-at-fill"></i></span>
                             <div class="form-floating flex-grow-1">
-                                <select name="usuario_fk" class="form-select border-subtle bg-body" id="Usuario" required>
+                                <select name="usuario_fk" class="form-select border-subtle bg-body" id="Usuario">
                                     <option value="" selected disabled>Seleccionar cuenta...</option>
                                     @foreach($usuariosClientes as $user)
                                         <option value="{{ $user->ID_usuario }}"
@@ -91,7 +109,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="Usuario" class="text-secondary">Vincular Cuenta de Usuario</label>
+                                <label for="Usuario" class="text-secondary">Vincular Cuenta de Usuario (Opcional)</label>
                             </div>
                             <div class="invalid-feedback">Selecciona un usuario.</div>
                         </div>
@@ -124,7 +142,7 @@
                         <div class="input-group input-group-lg has-validation shadow-sm">
                             <span class="input-group-text bg-body-tertiary border-subtle text-danger"><i class="bi bi-hash"></i></span>
                             <div class="form-floating flex-grow-1">
-                                <input type="text"
+                                <input type="number"
                                        class="form-control border-subtle bg-body"
                                        id="num_ext"
                                        name="num_ext"
@@ -150,11 +168,62 @@
                             </div>
                         </div>
                     </div>
+
+                    {{-- LOCALIDAD --}}
+                    <div class="col-md-6">
+                        <div class="input-group input-group-lg shadow-sm">
+                            <span class="input-group-text bg-body-tertiary border-subtle text-danger"><i class="bi bi-map-fill"></i></span>
+                            <div class="form-floating flex-grow-1">
+                                <input type="text"
+                                       class="form-control border-subtle bg-body"
+                                       id="localidad"
+                                       name="localidad"
+                                       value="{{ old('localidad', $fila->localidad ?? '') }}"
+                                       placeholder="Ej. San Martín Texmelucan">
+                                <label for="localidad" class="text-secondary">Localidad / Municipio</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- ESTADO (LISTA DESPLEGABLE) --}}
+                    @php
+                        $estadosMexico = [
+                            'Aguascalientes', 'Baja California', 'Baja California Sur', 'Campeche', 'Chiapas', 
+                            'Chihuahua', 'Ciudad de México', 'Coahuila', 'Colima', 'Durango', 'Estado de México', 
+                            'Guanajuato', 'Guerrero', 'Hidalgo', 'Jalisco', 'Michoacán', 'Morelos', 'Nayarit', 
+                            'Nuevo León', 'Oaxaca', 'Puebla', 'Querétaro', 'Quintana Roo', 'San Luis Potosí', 
+                            'Sinaloa', 'Sonora', 'Tabasco', 'Tamaulipas', 'Tlaxcala', 'Veracruz', 'Yucatán', 'Zacatecas'
+                        ];
+                    @endphp
+
+                    <div class="col-md-6">
+                        <div class="input-group input-group-lg shadow-sm">
+                            <span class="input-group-text bg-body-tertiary border-subtle text-danger"><i class="bi bi-pin-map-fill"></i></span>
+                            <div class="form-floating flex-grow-1">
+                                <select class="form-select border-subtle bg-body" id="estado" name="estado">
+                                    <option value="" selected disabled>Seleccionar estado...</option>
+                                    @foreach($estadosMexico as $estado)
+                                        <option value="{{ $estado }}" {{ old('estado', $fila->estado ?? '') == $estado ? 'selected' : '' }}>
+                                            {{ $estado }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <label for="estado" class="text-secondary">Estado</label>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-                {{-- BOTONES DE ACCIÓN (mt-auto los empuja hasta el final de la pantalla) --}}
+                {{-- BOTONES DE ACCIÓN --}}
                 <div class="d-flex justify-content-end mt-auto pt-4 border-top">
-                    <a href="{{ url($url_prefix ?? '/admon' . '/clientes') }}" class="btn btn-light border text-secondary me-3 px-4 fw-medium">Cancelar</a>
+                    @if(auth()->user()->rol_usuario === 'administrador')
+                       <a href="{{ url('/admon/clientes') }}" class="btn btn-light border text-secondary me-3 px-4 fw-medium">Cancelar</a>
+                    @endif
+
+                    @if(auth()->user()->rol_usuario === 'tecnico')
+                       <a href="{{ url('/tecnico/clientes') }}" class="btn btn-light border text-secondary me-3 px-4 fw-medium">Cancelar</a>
+                    @endif
                     <button type="submit" id="btnGuardar" class="btn btn-success px-5 fw-bold shadow-sm hover-lift">
                         <i class="bi bi-save me-2"></i>Guardar Cliente
                     </button>

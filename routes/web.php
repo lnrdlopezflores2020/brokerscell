@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\DashboardClientescoltroller;
-use App\Http\Controllers\RespaldosController;
-
+use App\Http\Controllers\BuscadorController;
 use App\Http\Controllers\ActualizarReparacionesController;
 
 /*
@@ -65,6 +64,10 @@ Route::middleware(['auth', 'role:administrador'])->prefix('admon')->group(functi
     Route::get('reportes/nota/{id}', [ReportesController::class, 'generarNota'])->name('admon_reportes.nota');
     Route::get('reportes/excel-clientes', [ClientesController::class, 'exportarExcel'])
         ->name('reportes.excel');
+    
+     
+
+        Route::get('reportes/reparaciones-mensual', [ReparacionesController::class, 'reporteMensual'])->name('admon.reportes.mensual');
 
     Route::resource('dispositivos', DispositivosController::class);
     Route::resource('tecnicos', TecnicosController::class);
@@ -87,8 +90,13 @@ Route::middleware(['auth', 'role:tecnico'])->prefix('tecnico')->group(function (
 
     Route::resource('reparaciones', ReparacionesController::class);
     Route::get('reportes/nota/{id}', [ReportesController::class, 'generarNota'])->name('reportes.nota');
+    Route::get('/nota-entrega/{id}', [ReportesController::class, 'generarNotaEntrega'])
+        ->name('cliente.nota_entrega_tec');
 
     Route::resource('Actualizar',ActualizarReparacionesController::class);
+
+    Route::get('buscador', [BuscadorController::class, 'index']);
+    Route::get('buscador/buscar', [BuscadorController::class, 'buscar']);
 
 });
 
@@ -104,10 +112,10 @@ Route::middleware(['auth', 'role:cliente'])->prefix('cliente')->group(function (
     Route::get('/cliente/nota-entrega/{id}', [ReportesController::class, 'generarNotaEntrega'])
         ->name('cliente.nota_entrega');
 
-    Route::get('/asistente', [App\Http\Controllers\ChatbotController::class, 'index'])->name('chatbot.index');
+    Route::get('/asistente', [ChatbotController::class, 'index'])->name('chatbot.index');
     
     // Ruta POST para PROCESAR los mensajes por JavaScript/AJAX
-    Route::post('/chatbot/procesar', [App\Http\Controllers\ChatbotController::class, 'procesarMensaje']);
+    Route::post('/chatbot/procesar', [ChatbotController::class, 'procesarMensaje']);
 });
 
 

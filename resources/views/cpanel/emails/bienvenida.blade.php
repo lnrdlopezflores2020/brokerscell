@@ -14,7 +14,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h2>¡Bienvenido a SoluxMovil!</h2>
+            <h2>¡Bienvenido a Brokerscell!</h2>
         </div>
         <div class="content">
             <p>Hola <strong>{{ $nombreCliente }}</strong>,</p>

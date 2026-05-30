@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión | SoluxMovil</title>
+    <title>Iniciar Sesión | Brokerscell</title>
+    <link rel="icon" href="/assets/images/brokerscell.jpeg" type="image/jpeg">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="icon" href="/assets/images/SOLUX.png" type="image/png">
+    <link rel="icon" href="/assets/images/BROKERSCELL.png" type="image/png">
     
     <style>
         :root {
-            --primary-color: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg-color: #f0f2f5;
+            /* Paleta Brokerscell */
+            --brand-purple: #6f42c1;
+            --brand-red: #dc3545;
+            --brand-blue: #0d6efd;
+            --brand-green: #198754;
+            --primary-hover: #59339d;
+            
+            /* Colores de UI */
+            --bg-color: #f4f7f6;
             --text-dark: #1e293b;
             --text-muted: #64748b;
             --input-bg: #f8fafc;
@@ -26,10 +33,44 @@
             font-family: 'Poppins', sans-serif;
         }
 
+        /* Contenedor externo para centrar */
+        .logo-wrapper {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* Degradado circular (Resplandor) detrás de la imagen */
+        .logo-container {
+            display: inline-block;
+            position: relative;
+            padding: 15px; /* Espacio para que se vea el resplandor */
+            border-radius: 50%;
+            /* Degradado radial usando los colores de tu marca */
+            background: radial-gradient(circle at center, rgba(111, 66, 193, 0.25) 0%, rgba(13, 110, 253, 0.1) 50%, transparent 100%);
+        }
+
+        /* Estilos para hacer la imagen redonda y elegante */
+        .logo-container img {
+            width: 140px;
+            height: 140px; /* Altura igual al ancho para un círculo perfecto */
+            object-fit: cover; /* Evita que la imagen se deforme */
+            border-radius: 50%; /* Recorta el JPEG en un círculo */
+            background-color: #ffffff; /* Fondo blanco de apoyo */
+            border: 3px solid #ffffff; /* Borde blanco para separarlo del resplandor */
+            box-shadow: 0 8px 20px rgba(111, 66, 193, 0.15); /* Sombra morada sutil */
+            transition: transform 0.3s ease;
+        }
+
+        /* Pequeña animación al pasar el mouse (opcional) */
+        .logo-container img:hover {
+            transform: scale(1.05);
+        }
+
         body {
             background-color: var(--bg-color);
-            background-image: radial-gradient(circle at top right, #e0e7ff 0%, transparent 40%),
-                              radial-gradient(circle at bottom left, #dbeafe 0%, transparent 40%);
+            /* Fondo con destellos sutiles morados y azules */
+            background-image: radial-gradient(circle at top right, rgba(111, 66, 193, 0.1) 0%, transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(13, 110, 253, 0.1) 0%, transparent 40%);
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -47,6 +88,18 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
             border-radius: 20px;
             overflow: hidden;
+            position: relative;
+        }
+
+        /* Barra superior con los 4 colores de la marca */
+        .color-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--brand-purple) 0%, var(--brand-blue) 33%, var(--brand-green) 66%, var(--brand-red) 100%);
+            z-index: 10;
         }
 
         /* Lado Izquierdo: Imagen orientada a tecnología/reparación */
@@ -58,12 +111,12 @@
             position: relative;
         }
 
-        /* Capa oscura tipo gradiente sobre la imagen */
+        /* Capa oscura tipo gradiente sobre la imagen (Morado a Azul) */
         .login-image::before {
             content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            background: linear-gradient(135deg, rgba(111, 66, 193, 0.85) 0%, rgba(13, 110, 253, 0.85) 100%);
         }
 
         /* Texto sobre la imagen */
@@ -77,14 +130,15 @@
         }
 
         .image-content h3 {
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
             margin-bottom: 10px;
+            letter-spacing: 1px;
         }
 
         .image-content p {
             font-size: 14px;
-            color: #cbd5e1;
+            color: rgba(255, 255, 255, 0.8);
             line-height: 1.6;
         }
 
@@ -96,6 +150,7 @@
             justify-content: center;
             padding: 50px 60px;
             background: #ffffff;
+            position: relative;
         }
 
         .logo-container {
@@ -104,7 +159,7 @@
         }
 
         .logo-container img {
-            width: 140px;
+            width: 160px;
             height: auto;
         }
 
@@ -143,7 +198,7 @@
 
         .input-field {
             width: 100%;
-            padding: 14px 14px 14px 45px; /* Espacio para el icono izquierdo */
+            padding: 14px 14px 14px 45px;
             background: var(--input-bg);
             border: 2px solid var(--border-color);
             border-radius: 10px;
@@ -154,14 +209,14 @@
 
         .input-field:focus {
             outline: none;
-            border-color: var(--primary-color);
+            border-color: var(--brand-purple);
             background: #fff;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 0 0 4px rgba(111, 66, 193, 0.1);
         }
 
         .input-field:focus + i.icon-left,
         .input-field:not(:placeholder-shown) + i.icon-left {
-            color: var(--primary-color);
+            color: var(--brand-purple);
         }
 
         /* Botón de mostrar/ocultar contraseña */
@@ -184,7 +239,7 @@
         .login-button {
             width: 100%;
             padding: 14px;
-            background-color: var(--primary-color);
+            background-color: var(--brand-purple);
             color: white;
             border: none;
             border-radius: 10px;
@@ -193,13 +248,13 @@
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 10px;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 4px 12px rgba(111, 66, 193, 0.2);
         }
 
         .login-button:hover {
             background-color: var(--primary-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(111, 66, 193, 0.3);
         }
 
         .login-button:active {
@@ -221,7 +276,7 @@
         }
 
         .forgot-password a:hover {
-            color: var(--primary-color);
+            color: var(--brand-purple);
         }
 
         .alert-error {
@@ -259,17 +314,22 @@
 <body>
 
 <div class="login-wrapper">
+    <!-- Barra decorativa con los colores de Brokerscell -->
+    <div class="color-bar"></div>
+
     <div class="login-image">
         <div class="image-content">
-            <h3>SoluxMovil</h3>
-            <p>Sistema integral de gestión técnica. Controla tus reparaciones, clientes y finanzas desde un solo lugar.</p>
+            <h3>Brokerscell</h3>
+            <p>Sistema integral de gestión técnica.</p>
         </div>
     </div>
     
     <div class="login-form-container">
         
-        <div class="logo-container">
-            <img src="/assets/images/SOLUXMOVIL.png" alt="Logo SoluxMovil">
+        <div class="logo-wrapper">
+            <div class="logo-container">
+                <img src="/assets/images/brokerscell.jpeg" alt="Logo Brokerscell">
+            </div>
         </div>
 
         <div class="login-header">
@@ -300,10 +360,6 @@
 
             <button type="submit" class="login-button">Iniciar sesión</button>
         </form>
-
-        <div class="forgot-password">
-            <a href="#">¿Olvidaste tu contraseña?</a>
-        </div>
     </div>
 </div>
 

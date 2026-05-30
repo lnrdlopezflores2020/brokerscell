@@ -37,6 +37,7 @@
                                 <th scope="col" class="ps-4 fw-semibold border-0 py-3 text-center" style="width: 100px;">ID</th>
                                 <th scope="col" class="fw-semibold border-0 py-3">Nombre</th>
                                 <th scope="col" class="fw-semibold border-0 py-3">Apellido</th>
+                                <th scope="col" class="fw-semibold border-0 py-3">Apellido Materno</th>
                                 <th scope="col" class="fw-semibold border-0 py-3"><i class="bi bi-telephone-fill me-1"></i> Teléfono</th>
                                 <th scope="col" class="text-center pe-4 fw-semibold border-0 py-3" style="width: 150px;">Acciones</th>
                             </tr>
@@ -55,6 +56,7 @@
                                     {{-- Datos --}}
                                     <td class="fw-medium text-body"> {{$fila->nombre}} </td>
                                     <td class="text-body"> {{$fila->apellido}} </td>
+                                    <td class="text-body"> {{$fila->amat}} </td>
                                     <td class="text-body"> {{$fila->tel_tecnico}} </td>
                                     
                                     {{-- Acciones (Botones estilizados) --}}
@@ -81,7 +83,7 @@
                             @empty
                                 {{-- Estado Vacío (Empty State) --}}
                                 <tr>
-                                    <td colspan="5" class="text-center py-5">
+                                    <td colspan="6" class="text-center py-5">
                                         <div class="d-flex flex-column align-items-center justify-content-center">
                                             <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
                                                 <i class="bi bi-person-badge display-4 text-secondary opacity-50"></i>
@@ -99,6 +101,12 @@
                     </table>
                 </div>
             </div>
+
+            {{-- ZONA DE PAGINACIÓN --}}
+            <div class="card-footer bg-white border-top d-flex justify-content-center pt-4 pb-2">
+                {{ $data->links('pagination::bootstrap-5') }}
+            </div>
+
         </div>
     </div>
 
@@ -134,7 +142,7 @@
                 return new bootstrap.Tooltip(tooltipTriggerEl)
             });
 
-            // 2. Confirmación de Eliminación con SweetAlert
+            // 2. Confirmación de Eliminación con SweetAlert (Modal Centrado)
             const deleteButtons = document.querySelectorAll('.btn-delete');
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function() {
@@ -149,7 +157,8 @@
                         confirmButtonColor: '#dc3545', // Rojo peligro
                         cancelButtonColor: '#6c757d', // Gris secundario
                         confirmButtonText: '<i class="bi bi-trash3-fill"></i> Sí, eliminar',
-                        cancelButtonText: 'Cancelar'
+                        cancelButtonText: 'Cancelar',
+                        backdrop: `rgba(0,0,0,0.4)`
                     }).then((result) => {
                         if (result.isConfirmed) {
                             form.submit();
@@ -158,32 +167,29 @@
                 });
             });
 
-            // 3. Configuración general para Toasts de Éxito/Error
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'bottom-end',
-                showConfirmButton: false,
-                timer: 3500,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
-
-            // 4. Mostrar Toast de Éxito
+            // 3. Alerta de Éxito (Modal Centrado)
             @if(session('success'))
-                Toast.fire({
+                Swal.fire({
                     icon: 'success',
-                    title: '{{ session('success') }}'
+                    title: '¡Operación Exitosa!',
+                    text: "{{ session('success') }}",
+                    confirmButtonColor: '#198754',
+                    confirmButtonText: 'Aceptar',
+                    timer: 3000, 
+                    timerProgressBar: true,
+                    backdrop: `rgba(0,0,0,0.4)`
                 });
             @endif
 
-            // 5. Mostrar Toast de Error
+            // 4. Alerta de Error (Modal Centrado)
             @if(session('error'))
-                Toast.fire({
+                Swal.fire({
                     icon: 'error',
-                    title: '{{ session('error') }}'
+                    title: 'Acción Denegada',
+                    text: "{{ session('error') }}",
+                    confirmButtonColor: '#dc3545',
+                    confirmButtonText: 'Entendido',
+                    backdrop: `rgba(0,0,0,0.4)`
                 });
             @endif
         });

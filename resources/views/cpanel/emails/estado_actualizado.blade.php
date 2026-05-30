@@ -36,7 +36,7 @@
             </p>
         </div>
         <div class="footer">
-            &copy; {{ date('Y') }} SoluxMovil. Todos los derechos reservados.
+            &copy; {{ date('Y') }} BrokersCell. Todos los derechos reservados.
         </div>
     </div>
 </body>

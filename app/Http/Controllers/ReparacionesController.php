@@ -8,12 +8,13 @@ use App\Models\Reparacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use PDF;
 
 class ReparacionesController extends Controller
 {
     public function index(){
         $reparaciones = DB::table('reparacion');
-        $fila = $reparaciones->get();
+        $fila = $reparaciones->paginate(10); // Paginación de 10 por página
         return view('cpanel/reparaciones/indexreparacion',['data' => $fila]);
     }
 
@@ -147,5 +148,25 @@ class ReparacionesController extends Controller
         $reparacion->delete();
 
         return redirect('/admon/reparaciones')->with('success', 'Registro eliminado del historial de forma permanente.');
+    }
+
+    public function reporteMensual(Request $request)
+    {
+        $mesSeleccionado = $request->input('mes');
+        [$anio, $mes] = explode('-', $mesSeleccionado);
+
+        $reparaciones = Reparacion::whereYear('fec_inicio', $anio)
+                                ->whereMonth('fec_inicio', $mes)
+                                ->get();
+
+        if ($reparaciones->isEmpty()) {
+            return back()->with('error', 'No hay datos para el mes seleccionado.');
+        }
+
+        // Pasamos los datos a la vista y generamos el PDF
+        $pdf = PDF::loadView('cpanel/reportes/pdf_mensual', compact('reparaciones', 'anio', 'mes'));
+        
+        // Descarga automática
+        return $pdf->download("Reporte_Reparaciones_{$mes}_{$anio}.pdf");
     }
 }

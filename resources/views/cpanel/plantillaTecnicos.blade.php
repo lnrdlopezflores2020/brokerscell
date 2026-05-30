@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield("title") | SoluxMovil</title>
+    <title>@yield("title") | Brokerscell</title>
     
     {{-- SCRIPT ANTI-PARPADEO: Aplica el tema guardado antes de que la página se dibuje --}}
     <script>
         (function() {
-            const temaGuardado = localStorage.getItem('solux_theme');
+            const temaGuardado = localStorage.getItem('brokerscell_theme');
             if (temaGuardado === 'dark') {
                 document.documentElement.setAttribute('data-bs-theme', 'dark');
             }
@@ -24,9 +24,20 @@
     
     {{-- Iconos de Bootstrap --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="icon" href="/assets/images/SOLUXMOVIL.png" type="image/png">
+    <link rel="icon" href="/assets/images/brokerscell.jpeg" type="image/jpeg">
     
     <style>
+        /* Paleta de colores personalizada Brokerscell */
+        :root {
+            --brand-purple: #6f42c1;
+            --brand-red: #dc3545;
+            --brand-blue: #0d6efd;
+            --brand-green: #198754;
+        }
+
+        .text-brand-purple { color: var(--brand-purple) !important; }
+        .bg-brand-purple { background-color: var(--brand-purple) !important; }
+
         /* Ajustes de Navegación */
         .tech-navbar {
             background-color: #1e293b; 
@@ -51,7 +62,7 @@
         .sidebar-link.active {
             background-color: #0f172a;
             color: #ffffff;
-            border-left-color: #3b82f6;
+            border-left-color: var(--brand-purple); /* Indicador en morado */
             font-weight: 600;
         }
 
@@ -133,7 +144,7 @@
                     <span class="navbar-toggler-icon" style="width: 1.2em; height: 1.2em;"></span>
                 </button>
                 <a class="navbar-brand fw-bold tracking-wide" href="{{ url('/tecnico') }}">
-                    <i class="bi bi-tools text-primary me-2"></i>SOLUX<span class="text-primary">MOVIL</span>
+                    <i class="bi bi-tools text-brand-purple me-2"></i>Brokers<span class="text-brand-purple">cell</span>
                 </a>
             </div>
 
@@ -166,7 +177,7 @@
                     <li>
                         @php $prefix = auth()->user()->rol_usuario === 'administrador' ? 'admon' : 'tecnico'; @endphp
                         <a class="dropdown-item py-2 rounded" href="{{ url('/' . $prefix . '/perfilUsuario') }}">
-                            <i class="bi bi-person me-2 text-primary"></i>Mi Perfil
+                            <i class="bi bi-person me-2 text-brand-purple"></i>Mi Perfil
                         </a>
                     </li>
                     <li>
@@ -181,7 +192,7 @@
                     <li><h6 class="dropdown-header text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px;">Herramientas</h6></li>
                     <li>
                         <a class="dropdown-item py-2 rounded" href="{{ url('/'.$prefix.'/reparaciones/create') }}">
-                            <i class="bi bi-plus-circle me-2 text-info"></i>Nueva Reparación
+                            <i class="bi bi-plus-circle me-2 text-primary"></i>Nueva Reparación
                         </a>
                     </li>
                     
@@ -218,28 +229,35 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs($prefix.'.index') ? 'active' : '' }}" href="{{ url('/'.$prefix) }}">
-                                <i class="bi bi-house-door-fill me-3 opacity-75"></i> Inicio
+                                <i class="bi bi-house-door-fill me-3 text-brand-purple"></i> Inicio
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('reparaciones.*') ? 'active' : '' }}" href="{{ url('/'.$prefix.'/reparaciones') }}">
-                                <i class="bi bi-tools me-3 opacity-75"></i> Reparaciones
+                                <i class="bi bi-tools me-3 text-danger"></i> Reparaciones
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('dispositivos.*') ? 'active' : '' }}" href="{{ url('/'.$prefix.'/dispositivos') }}">
-                                <i class="bi bi-phone-fill me-3 opacity-75"></i> Dispositivos
+                                <i class="bi bi-phone-fill me-3 text-primary"></i> Dispositivos
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('clientes.*') ? 'active' : '' }}" href="{{ url('/'.$prefix.'/clientes') }}">
-                                <i class="bi bi-person-vcard-fill me-3 opacity-75"></i> Clientes
+                                <i class="bi bi-person-vcard-fill me-3 text-success"></i> Clientes
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('buscador.*') ? 'active' : '' }}" href="{{ url('/'.$prefix.'/buscador') }}">
+                                <i class="bi bi-globe me-3 opacity-75"></i> Búsqueda Técnica
+                            </a>
+                        </li>
+                        
                         @if(auth()->user()->rol_usuario === 'administrador')
                         <li class="nav-item">
                             <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('usuarios.*') ? 'active' : '' }}" href="{{ url('/admon/usuarios') }}">
-                                <i class="bi bi-shield-lock-fill me-3 opacity-75"></i> Accesos / Usuarios
+                                <i class="bi bi-shield-lock-fill me-3 text-brand-purple"></i> Accesos / Usuarios
                             </a>
                         </li>
                         @endif
@@ -247,7 +265,7 @@
                 </div>
 
                 <div class="offcanvas-footer p-3 border-top text-center" style="border-color: #334155 !important; color: #64748b; font-size: 0.8rem;">
-                    SoluxMovil System v1.0
+                    Brokerscell System v1.0
                 </div>
             </div>
         </div>
@@ -281,7 +299,7 @@
             const nuevoTema = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-bs-theme', nuevoTema);
             switchTema.checked = (nuevoTema === 'dark');
-            localStorage.setItem('solux_theme', nuevoTema);
+            localStorage.setItem('brokerscell_theme', nuevoTema);
             actualizarIcono(nuevoTema);
         });
 

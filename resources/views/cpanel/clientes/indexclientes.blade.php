@@ -17,6 +17,7 @@
 
 @extends($layout)
 @section('title','clientes')
+
 @section('content')
     <div class="container-fluid py-4">
         <div class="card shadow-sm border-0 rounded-4 bg-body">
@@ -51,11 +52,9 @@
             </div>
 
             <div class="card-body p-0">
-                {{-- SE AGREGÓ EL SCROLL VERTICAL AQUÍ --}}
                 <div class="table-responsive" style="max-height: 600px; overflow-y: auto; overflow-x: auto;">
                     <table class="table table-hover align-middle mb-0">
                         
-                        {{-- SE FIJÓ EL ENCABEZADO AQUÍ --}}
                         <thead class="table-light text-secondary small text-uppercase" style="position: sticky; top: 0; z-index: 1;">
                             <tr>
                                 <th scope="col" class="ps-4 fw-semibold border-0 py-3">Cliente</th>
@@ -77,7 +76,7 @@
                                             {{ strtoupper(substr($fila->nombre, 0, 1)) }}{{ strtoupper(substr($fila->apellido, 0, 1)) }}
                                         </div>
                                         <div>
-                                            <h6 class="mb-0 fw-bold text-body">{{$fila->nombre}} {{$fila->apellido}}</h6>
+                                            <h6 class="mb-0 fw-bold text-body">{{$fila->nombre}} {{$fila->apellido}} {{ $fila->amat ?? '' }}</h6>
                                             <small class="text-muted">ID: #{{ str_pad($fila->ID_client, 5, '0', STR_PAD_LEFT) }}</small>
                                         </div>
                                     </div>
@@ -160,6 +159,12 @@
                     </table>
                 </div>
             </div>
+
+            {{-- ZONA DE PAGINACIÓN --}}
+            <div class="card-footer bg-white border-top d-flex justify-content-center pt-4 pb-2">
+                {{ $data->links('pagination::bootstrap-5') }}
+            </div>
+
         </div>
     </div>
 

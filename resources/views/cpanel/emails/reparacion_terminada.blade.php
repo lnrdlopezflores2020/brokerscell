@@ -38,7 +38,7 @@
             <a href="{{ route('cliente.nota_entrega', $reparacion->ID_rep) }}" class="btn-nota" target="_blank">Descargar Nota de Entrega</a>
         </div>
         <div class="footer">
-            &copy; {{ date('Y') }} SoluxMovil. Todos los derechos reservados.
+            &copy; {{ date('Y') }} BrokersCell. Todos los derechos reservados.
         </div>
     </div>
 </body>

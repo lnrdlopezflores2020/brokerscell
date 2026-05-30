@@ -22,7 +22,8 @@ class Cliente extends Model
         'direccion',
         'num_ext',
         'num_int',
-        'usuario_fk'
+        'usuario_fk',
+        'amat' // NUEVO CAMPO: Apellido Materno
     ];
     public function usuario()
     {
