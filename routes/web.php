@@ -84,11 +84,11 @@ Route::middleware(['auth', 'role:tecnico'])->prefix('tecnico')->group(function (
         return view('cpanel/usuarios/perfilusuario');
     })->name('perfilusuario');
 
-    Route::resource('clientes', ClientesController::class);
+    Route::resource('clientes', ClientesController::class)->names('tecnico.clientes');
 
-    Route::resource('dispositivos', DispositivosController::class);
+    Route::resource('dispositivos', DispositivosController::class)->names('tecnico.dispositivos');
 
-    Route::resource('reparaciones', ReparacionesController::class);
+    Route::resource('reparaciones', ReparacionesController::class)->names('tecnico.reparaciones');
     Route::get('reportes/nota/{id}', [ReportesController::class, 'generarNota'])->name('reportes.nota');
     Route::get('/nota-entrega/{id}', [ReportesController::class, 'generarNotaEntrega'])
         ->name('cliente.nota_entrega_tec');

@@ -233,17 +233,17 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('reparaciones.*') ? 'active' : '' }}" href="{{ url('/'.$prefix.'/reparaciones') }}">
+                            <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('tecnico.reparaciones.*') ? 'active' : '' }}" href="{{ url('/'.$prefix.'/reparaciones') }}">
                                 <i class="bi bi-tools me-3 text-danger"></i> Reparaciones
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('dispositivos.*') ? 'active' : '' }}" href="{{ url('/'.$prefix.'/dispositivos') }}">
+                            <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('tecnico.dispositivos.*') ? 'active' : '' }}" href="{{ url('/'.$prefix.'/dispositivos') }}">
                                 <i class="bi bi-phone-fill me-3 text-primary"></i> Dispositivos
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('clientes.*') ? 'active' : '' }}" href="{{ url('/'.$prefix.'/clientes') }}">
+                            <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('tecnico.clientes.*') ? 'active' : '' }}" href="{{ url('/'.$prefix.'/clientes') }}">
                                 <i class="bi bi-person-vcard-fill me-3 text-success"></i> Clientes
                             </a>
                         </li>
@@ -253,14 +253,6 @@
                                 <i class="bi bi-globe me-3 opacity-75"></i> Búsqueda Técnica
                             </a>
                         </li>
-                        
-                        @if(auth()->user()->rol_usuario === 'administrador')
-                        <li class="nav-item">
-                            <a class="nav-link sidebar-link px-4 py-3 {{ request()->routeIs('usuarios.*') ? 'active' : '' }}" href="{{ url('/admon/usuarios') }}">
-                                <i class="bi bi-shield-lock-fill me-3 text-brand-purple"></i> Accesos / Usuarios
-                            </a>
-                        </li>
-                        @endif
                     </ul>
                 </div>
 
