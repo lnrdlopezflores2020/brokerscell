@@ -1,0 +1,111 @@
+/* --- Estilos Generales --- */
+body {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    /* Agregamos esto para asegurar que el padding no aumente el ancho total */
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+.borde {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* --- Contenedor Principal --- */
+.container {
+    width: 80%;
+    max-width: 2000px;
+    /* CAMBIO IMPORTANTE: Usamos min-height en lugar de height fijo para evitar desbordes */
+    min-height: 500px;
+    height: auto; /* Deja que crezca si el contenido es largo */
+
+    box-shadow: 5px 10px 10px 0px gray;
+    border-radius: 10px;
+    margin-top: 100px;
+    margin-bottom: 50px; /* Margen abajo para que no pegue al final */
+
+    display: flex;
+    /* Permite que los elementos bajen si no caben */
+    flex-wrap: wrap;
+
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    align-items: center;
+    justify-content: center; /* Centrar contenido horizontalmente */
+}
+
+table {
+    border-color: black;
+    width: 100%; /* Para que la tabla se adapte al contenedor */
+    max-width: 100%;
+}
+
+.main-panel {
+    margin-top: 70px; /* Asegura que ocupe el espacio disponible */
+    /* Asegura que ocupe el espacio disponible */
+}
+
+/* --- Menú Offcanvas --- */
+.offcanvas-body .nav-link {
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.offcanvas-body .nav-link:hover {
+    transform: translateX(10px);
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
+.offcanvas-body .nav-link img {
+    transition: transform 0.3s ease;
+}
+
+/* --- MEDIA QUERIES (Aquí ocurre la magia responsive) --- */
+
+/* Para Tablets y Móviles (menos de 992px) */
+@media (max-width: 992px) {
+    .container {
+        width: 95%; /* Ocupar más ancho en pantallas medianas */
+        margin-top: 50px; /* Reducir margen superior */
+    }
+}
+
+/* Para Móviles (menos de 768px) */
+@media (max-width: 768px) {
+    .container {
+        width: 98%; /* Casi todo el ancho */
+        margin-top: 20px;
+        flex-direction: column; /* Apilar elementos uno sobre otro verticalmente */
+        padding: 15px; /* Añadir padding interno */
+        height: auto; /* Altura automática */
+    }
+
+    .borde {
+        width: 100%; /* Asegurar que los elementos internos no se salgan */
+    }
+
+    /* Ajuste para que las tablas no rompan el diseño en móviles */
+    table {
+        display: block;
+        overflow-x: auto; /* Scroll horizontal si la tabla es muy ancha */
+    }
+
+    /* En móvil el efecto hover no existe (es touch), lo suavizamos */
+    .offcanvas-body .nav-link:hover {
+        transform: translateX(5px);
+    }
+}
+

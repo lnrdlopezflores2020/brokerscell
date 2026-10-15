@@ -1,0 +1,21 @@
+
+#bienvenida {
+    color: black;
+    font-size: 70px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Animación para que la imagen se deslice desde arriba */
+    .imagen-animada {
+      transform: translateY(-100%);
+      opacity: 0;
+      animation: deslizarDesdeArriba 1.6s ease-out forwards;
+    }
+
+    @keyframes deslizarDesdeArriba {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
