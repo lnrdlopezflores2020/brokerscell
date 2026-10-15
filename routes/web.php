@@ -26,8 +26,8 @@ use App\Http\Controllers\ActualizarReparacionesController;
 */
 
 Route::get('/', function () {
-    return view('cpanel/Home');
-})->name('SoluxMovil');
+    return view('cpanel/home');
+})->name('Borkerscell');
 
 
 // Ruta para VER el formulario (GET)
@@ -95,8 +95,7 @@ Route::middleware(['auth', 'role:tecnico'])->prefix('tecnico')->group(function (
 
     Route::resource('Actualizar',ActualizarReparacionesController::class);
 
-    Route::get('buscador', [BuscadorController::class, 'index']);
-    Route::get('buscador/buscar', [BuscadorController::class, 'buscar']);
+ 
 
 });
 
