@@ -45,7 +45,7 @@ class HomeController extends Controller
             ->take(5)
             ->get();
 
-        return view('cpanel/Inicios/inicio', compact(
+        return view('cpanel/inicios/inicio', compact(
             'totalClientes', 'totalStaff',
             'pendientes', 'enRevision', 'enReparacion', 'terminados', 'entregados',
             'ingresosTotales', 'dataTendencia', 'ultimosIngresos'
